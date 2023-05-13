@@ -50,6 +50,10 @@ int main(int argc, char *argv[], char *envp[])
 		if (is_interactive)
 			_writestr("$ ");
 		cmd_len = getline(&cmd, &mem_len, stdin);
+		if (cmd == NULL)
+			break;
+		else if (cmd[0] == '\n')
+			continue;
 
 		fork_ret = fork();
 		if (fork_ret == -1)
@@ -59,8 +63,6 @@ int main(int argc, char *argv[], char *envp[])
 		}
 		else if (fork_ret == 0)
 		{ /* child process */
-			if (cmd == NULL)
-				break;
 			child_process(cmd, cmd_len, argv[0]);
 		}
 		else
