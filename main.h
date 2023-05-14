@@ -3,6 +3,7 @@
 
 unsigned int _strlen(char *str);
 int _writestr(char *str);
-int _strcmp(char *str1, char *str2);
+int _strncmp(char *str1, char *str2, unsigned int n);
+char *_strcat(char *dest, const char *src);
 
 #endif /* !MAIN_H */
