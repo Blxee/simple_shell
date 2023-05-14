@@ -3,6 +3,7 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 /**
  * child_process - creates a child process,
@@ -14,9 +15,20 @@
  */
 void child_process(char *cmd, ssize_t cmd_len, char *program_name)
 {
-	char *args[] = {NULL, NULL};
+	char *args[100];
+	int i = 0;
+	char *token;
 
-	cmd[cmd_len - 1] = '\0'; /* remove the newline char from inp */
+	token = strtok(cmd, " \t\n");
+	while (token)
+	{
+		args[i] = token;
+		i++;
+		token = strtok(NULL, " \t\n");
+	}
+	args[i] = NULL; /*set the last element to NULL*/
+
+	cmd[cmd_len - 1] = '\0';  /*remove the newline char from inp*/ 
 	args[0] = cmd;
 
 	if (execve(cmd, args, NULL) == -1)
@@ -62,10 +74,10 @@ int main(int argc, char *argv[], char *envp[])
 			perror(argv[0]);
 			exit(127);
 		}
-		else if (fork_ret == 0)
+		if (fork_ret == 0)
 		{ /* child process */
-			child_process(cmd, cmd_len, argv[0]);
-		}
+			child_process(cmd, cmd_len, argv[0]); /*pass the entire command line to*/			  
+		 }				     /*child_process()*/
 		else
 		{ /* main process */
 			wait(&child_ret); /* wait for the child process */
