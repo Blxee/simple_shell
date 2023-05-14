@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 /**
  * child_process - creates a child process,
