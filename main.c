@@ -105,7 +105,10 @@ void parse_cmd(char cmd[], char *args[], char *line)
 void user_input(char *input, int *exit_flag)
 {
 	if (_strcmp(input, "exit") == 0)
+	{
 		*exit_flag = 1;
+		exit(0);
+	}
 }
 /**
  * main - simple shell program
