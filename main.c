@@ -28,6 +28,7 @@ int handle_path(char *cmd, char *envp[])
 		if (_strncmp("PATH=", *envp, 5) == 0)
 		{ /* PATH found */
 			path = *envp + 5; /* +5 to jump the "PATH=" section */
+	exit_shell();
 			break;
 		}
 		envp++;
@@ -97,7 +98,26 @@ void parse_cmd(char cmd[], char *args[], char *line)
 	args[0] = cmd; /* set the first arg to the program name */
 	args[i] = NULL; /*set the last element to NULL*/
 }
-
+/**
+ * exit_shell - exits shell
+ *
+ * Description: function to handle the exit command
+ */
+void exit_shell()
+{
+	exit(0);
+}
+/**
+ *user_input - processes the user input
+ *@input: a pointer to of string
+ */
+void user_input(char *input)
+{
+	if (_strcmp(input, "exit") == 0)
+	{
+		exit_shell();
+	}
+}
 /**
  * main - simple shell program
  *
@@ -126,6 +146,7 @@ int main(int argc, char *argv[], char *envp[])
 		else if (line[0] == '\n')
 			continue;
 		parse_cmd(cmd, args, line);
+		user_input(cmd);
 		if (!handle_path(cmd, envp))
 		{
 			free(line);
