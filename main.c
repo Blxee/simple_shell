@@ -124,7 +124,7 @@ int main(int argc, char *argv[], char *envp[])
 	int is_interactive = isatty(STDOUT_FILENO) && isatty(STDIN_FILENO);
 
 	(void)argc;
-	while (1 && !exit_flag)
+	while (!exit_flag)
 	{
 		if (is_interactive)
 			_writestr("$ ");
