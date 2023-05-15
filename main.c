@@ -28,7 +28,6 @@ int handle_path(char *cmd, char *envp[])
 		if (_strncmp("PATH=", *envp, 5) == 0)
 		{ /* PATH found */
 			path = *envp + 5; /* +5 to jump the "PATH=" section */
-	exit_shell();
 			break;
 		}
 		envp++;
@@ -99,24 +98,14 @@ void parse_cmd(char cmd[], char *args[], char *line)
 	args[i] = NULL; /*set the last element to NULL*/
 }
 /**
- * exit_shell - exits shell
- *
- * Description: function to handle the exit command
- */
-void exit_shell()
-{
-	exit(0);
-}
-/**
  *user_input - processes the user input
  *@input: a pointer to of string
+ *@exit_flag: exit flag
  */
-void user_input(char *input)
+void user_input(char *input, int *exit_flag)
 {
 	if (_strcmp(input, "exit") == 0)
-	{
-		exit_shell();
-	}
+		*exit_flag = 1;
 }
 /**
  * main - simple shell program
@@ -129,13 +118,13 @@ void user_input(char *input)
  */
 int main(int argc, char *argv[], char *envp[])
 {
-	int fork_ret, child_ret;
+	int fork_ret, child_ret, exit_flag = 0;
 	char *line, cmd[1024] = {0}, *args[128];
 	size_t mem_len;
 	int is_interactive = isatty(STDOUT_FILENO) && isatty(STDIN_FILENO);
 
 	(void)argc;
-	while (1)
+	while (1 && !exit_flag)
 	{
 		if (is_interactive)
 			_writestr("$ ");
@@ -146,7 +135,7 @@ int main(int argc, char *argv[], char *envp[])
 		else if (line[0] == '\n')
 			continue;
 		parse_cmd(cmd, args, line);
-		user_input(cmd);
+		user_input(cmd, &exit_flag);
 		if (!handle_path(cmd, envp))
 		{
 			free(line);

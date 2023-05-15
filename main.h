@@ -6,5 +6,4 @@ int _writestr(char *str);
 int _strncmp(char *str1, char *str2, unsigned int n);
 char *_strcat(char *dest, const char *src);
 int _strcmp(char *s1, char *s2);
-void exit_shell();
 #endif /* !MAIN_H */
