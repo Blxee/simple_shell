@@ -8,12 +8,12 @@ first compile the program using:
 ./compile.sh
 ```
 
-This will produce a `hsh` executable,  
+This will produce a `shell` executable,  
 you can run it in interactive mode:
 
 ```
-./hsh
-$ /bin/pwd
+./shell
+$ pwd
 /home
 $ ^C
 ```

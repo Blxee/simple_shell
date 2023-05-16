@@ -64,10 +64,13 @@ char *_strcat(char *dest, const char *src)
 	}
 	return (dest);
 }
+
 /**
  * _strcmp - Compares two strings
+ *
  * @s1: pointer to a string
  * @s2: pointer to a string
+ *
  * Return: an integer
  */
 int _strcmp(char *s1, char *s2)
