@@ -105,7 +105,11 @@ void parse_cmd(char cmd[], char *args[], char *line)
  * @line: the input line to be freed when errors happen
  * @program_name: the name of the current program
  */
-void fork_process(int is_interactive, char *args[], char line[], char *program_name)
+void fork_process(
+		int is_interactive,
+		char *args[],
+		char line[],
+		char *program_name)
 {
 	int fork_ret, child_ret;
 
@@ -116,7 +120,7 @@ void fork_process(int is_interactive, char *args[], char line[], char *program_n
 		exit(127);
 	}
 	if (fork_ret == 0) /* child process */
-		child_process(args[0], args, program_name); /*pass the entire command line to*/
+		child_process(args[0], args, program_name);
 	else
 	{ /* main process */
 		wait(&child_ret); /* wait for the child process */

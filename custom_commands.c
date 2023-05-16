@@ -3,8 +3,7 @@
 /**
  * check_exit - checks the "exit" custom command
  *
- * @input: a pointer to of string
- * @exit_flag: exit flag
+ * @cmd: the command from user
  *
  * Return:
  *	1 if the command was "exit"

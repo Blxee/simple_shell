@@ -33,7 +33,7 @@ int main(int argc, char *argv[], char *envp[])
 			exit(0);
 		if (check_env(cmd, envp))
 			continue;
-		if (!handle_path(cmd, envp)) // prepends the aboslute path to cmd
+		if (!handle_path(cmd, envp))
 		{
 			free(line);
 			perror(argv[0]);
