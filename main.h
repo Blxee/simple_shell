@@ -8,11 +8,13 @@ void fork_process(int is_interactive, char *args[], char line[], char *program_n
 
 int check_exit(char *cmd);
 int check_env(char *cmd, char **envp);
-
+/* io utils */
 unsigned int _strlen(char *str);
 int _writestr(char *str);
+/* string utils */
 int _strncmp(char *str1, char *str2, unsigned int n);
 char *_strcat(char *dest, const char *src);
 int _strcmp(char *s1, char *s2);
+char *_strcpy(char *dest, const char *src);
 
 #endif /* !MAIN_H */

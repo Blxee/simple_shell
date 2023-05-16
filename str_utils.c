@@ -88,3 +88,22 @@ int _strcmp(char *s1, char *s2)
 	}
 	return (0);
 }
+
+/**
+ * _strcpy - copies one string to the other
+ *
+ * @dest: the destination to copy to
+ * @src: the source to copy from
+ *
+ * Return: the @dest pointer
+ */
+char *_strcpy(char *dest, const char *src)
+{
+  char *tmp = dest;
+
+	if (tmp && src)
+		do {
+			*tmp++ = *src;
+		} while (*src++);
+	return (dest);
+}

@@ -17,9 +17,9 @@
  */
 int handle_path(char *cmd, char *envp[])
 {
-	char *path = NULL, *dir, cmd_cpy[128] = {0};
+	char *path = NULL, *dir, cmd_cpy[128];
 
-	_strcat(cmd_cpy, cmd); /* preserve the original command */
+	_strcpy(cmd_cpy, cmd); /* preserve the original command */
 	if (access(cmd_cpy, F_OK) == 0) /* if cmd is a full path */
 		return (1);
 	while (*envp)
@@ -37,8 +37,7 @@ int handle_path(char *cmd, char *envp[])
 		dir = strtok(path, ":");
 		while (dir)
 		{ /* go through each directory in PATH */
-			*cmd = '\0';
-			_strcat(cmd, dir);
+			_strcpy(cmd, dir);
 			_strcat(cmd, "/");
 			_strcat(cmd, cmd_cpy);
 			if (access(cmd, F_OK) == 0) /* if file exists */
@@ -81,15 +80,11 @@ void parse_cmd(char cmd[], char *args[], char *line)
 	token = strtok(line, " \t\n");
 
 	if (token)
-	{
-		cmd[0] = '\0';
-		_strcat(cmd, token); /* set cmd to be the first token */
-	}
+		_strcpy(cmd, token); /* set cmd to be the first token */
 
 	while (token)
 	{
-		args[i] = token;
-		i++;
+		args[i++] = token;
 		token = strtok(NULL, " \t\n");
 	}
 

@@ -13,7 +13,7 @@
  */
 int main(int argc, char *argv[], char *envp[])
 {
-	char *line, cmd[1024] = {0}, *args[128];
+	char *line, cmd[1024], *args[128];
 	size_t mem_len;
 	int is_interactive = isatty(STDOUT_FILENO) && isatty(STDIN_FILENO);
 
