@@ -48,11 +48,8 @@ ssize_t _getline(char **line_p, size_t *len_p, int fd)
 			new_p = malloc(*len_p * sizeof(char));
 
 			if (new_p == NULL)
-			{
-				free(*line_p);
 				return (-1);
-			}
-			strcpy(new_p, *line_p);
+			_strcpy(new_p, *line_p);
 			free(*line_p);
 			*line_p = new_p;
 		}

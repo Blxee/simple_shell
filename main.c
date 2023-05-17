@@ -14,8 +14,8 @@
  */
 int main(int argc, char *argv[], char *envp[])
 {
-	char *line, cmd[1024], *args[128];
-	size_t mem_len;
+	char *line = NULL, cmd[1024], *args[128];
+	size_t mem_len = 0;
 	ssize_t read_bytes;
 	int is_interactive = isatty(STDOUT_FILENO) && isatty(STDIN_FILENO);
 
@@ -24,7 +24,6 @@ int main(int argc, char *argv[], char *envp[])
 	{
 		if (is_interactive)
 			_writestr("$ ");
-		line = NULL;
 		read_bytes = _getline(&line, &mem_len, STDIN_FILENO);
 		if (read_bytes == -1)
 			break;
