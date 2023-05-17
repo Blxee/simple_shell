@@ -1,6 +1,7 @@
 #include "main.h"
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 /**
  * main - simple shell program
@@ -15,6 +16,7 @@ int main(int argc, char *argv[], char *envp[])
 {
 	char *line, cmd[1024], *args[128];
 	size_t mem_len;
+	ssize_t read_bytes;
 	int is_interactive = isatty(STDOUT_FILENO) && isatty(STDIN_FILENO);
 
 	(void)argc;
@@ -23,10 +25,10 @@ int main(int argc, char *argv[], char *envp[])
 		if (is_interactive)
 			_writestr("$ ");
 		line = NULL;
-		getline(&line, &mem_len, stdin);
-		if (line == NULL)
+		read_bytes = _getline(&line, &mem_len, STDIN_FILENO);
+		if (read_bytes == -1)
 			break;
-		else if (line[0] == '\n')
+		else if (read_bytes == 0)
 			continue;
 		parse_cmd(cmd, args, line);
 		if (check_exit(cmd))
@@ -41,5 +43,6 @@ int main(int argc, char *argv[], char *envp[])
 		}
 		fork_process(is_interactive, args, line, argv[0]);
 	}
+	free(line);
 	return (0);
 }
