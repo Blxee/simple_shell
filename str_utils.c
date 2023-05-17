@@ -1,6 +1,4 @@
 #include "main.h"
-#define READ_SIZE 1024
-
 
 /**
  * _strlen - determines the length of a string
@@ -107,58 +105,4 @@ char *_strcpy(char *dest, const char *src)
 			*tmp++ = *src;
 		} while (*src++);
 	return (dest);
-}
-/**
- * _getline - reads an entire line from the input
- * @fd: a file descriptor
- * @lineptr: a pointer to a pointer to character
- * @n: a pointer to an unsigned integer
- * Return: the total number of bytes read
- */
-ssize_t _getline(char **lineptr, size_t *n, int fd)
-{
-	static char buffer[READ_SIZE];
-	static ssize_t i =0;
-	static ssize_t buffer_size = 0;
-	ssize_t sum_bytes_read = 0;
-	ssize_t bytes_read = 0;
-	char *tmp = NULL;
-
-	if (!lineptr || !n)
-		return (-1);
-	if (!(*lineptr) || *n == 0)
-	{
-		*n = READ_SIZE;
-		*lineptr = malloc(READ_SIZE);
-		if (*lineptr == NULL)
-			return (-1);
-		*n = READ_SIZE;
-	}
-	tmp =*lineptr;
-	while (1)
-	{
-		if (i >= buffer_size)
-		{
-			bytes_read = read(fd, buffer, READ_SIZE);
-			if (bytes_read <= 0)
-				break;
-			i = 0; /* index of the buffer */
-			buffer_size = bytes_read;
-		}
-		tmp[sum_bytes_read] = buffer[i];
-		i++;
-		sum_bytes_read++;
-		if (tmp[sum_bytes_read - 1] == '\n')
-			break;
-		tmp++;
-		if (sum_bytes_read >= (ssize_t)(*n))
-			return (-1);
-	}
-	if (sum_bytes_read == 0)
-	{
-		free(*lineptr);
-		*lineptr = NULL;
-		*n = 0;
-	}
-	return (sum_bytes_read);
 }

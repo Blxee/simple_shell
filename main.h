@@ -4,6 +4,11 @@
 #include <unistd.h>
 #include <stdio.h>
 
+#ifdef INIT_READ_SIZE
+#undef INIT_READ_SIZE
+#endif /* !INIT_READ_SIZE */
+#define INIT_READ_SIZE 128
+
 int handle_path(char *cmd, char *envp[]);
 void child_process(char *cmd, char *args[], char *program_name);
 void parse_cmd(char cmd[], char *args[], char *line);
