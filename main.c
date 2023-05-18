@@ -42,6 +42,5 @@ int main(int argc, char *argv[], char *envp[])
 		}
 		fork_process(is_interactive, args, line, argv[0]);
 	}
-	free(line);
 	return (0);
 }

@@ -49,7 +49,7 @@ ssize_t _getline(char **line_p, size_t *len_p, int fd)
 
 			if (new_p == NULL)
 				return (-1);
-			strcpy(new_p, *line_p);
+			_strcpy(new_p, *line_p);
 			free(*line_p);
 			*line_p = new_p;
 		}

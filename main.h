@@ -12,7 +12,10 @@
 int handle_path(char *cmd, char *envp[]);
 void child_process(char *cmd, char *args[], char *program_name);
 void parse_cmd(char cmd[], char *args[], char *line);
-void fork_process(int is_interactive, char *args[], char line[], char *program_name);
+void fork_process(int is_interactive,
+		char *args[],
+		char line[],
+		char *program_name);
 int check_exit(char *cmd);
 int check_env(char *cmd, char **envp);
 /* io utils */
