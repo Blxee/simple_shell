@@ -18,7 +18,6 @@ void fork_process(int is_interactive,
 		char *args[],
 		char line[],
 		char *program_name);
-/*int check_exit(char *cmd);*/
 int check_env(char *cmd, char **envp);
 /* io utils */
 unsigned int _strlen(char *str);
