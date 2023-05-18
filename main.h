@@ -4,6 +4,11 @@
 #include <unistd.h>
 #include <stdio.h>
 
+#ifdef READ_BUFFER_SIZE
+#undef READ_BUFFER_SIZE
+#endif /* !READ_BUFFER_SIZE */
+#define READ_BUFFER_SIZE 1024
+
 #ifdef INIT_READ_SIZE
 #undef INIT_READ_SIZE
 #endif /* !INIT_READ_SIZE */

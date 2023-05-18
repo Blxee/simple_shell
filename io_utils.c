@@ -29,6 +29,8 @@ int _writestr(char *str)
  */
 ssize_t _getline(char **line_p, size_t *len_p, int fd)
 {
+	static char s_buffer[READ_BUFFER_SIZE];
+	static int s_buflen, s_bufidx;
 	ssize_t strlen = 0;
 	char chr = 0, *new_p;
 
@@ -42,8 +44,14 @@ ssize_t _getline(char **line_p, size_t *len_p, int fd)
 
 	while (chr != '\n')
 	{
-		if (read(fd, &chr, 1) == -1)
-			return (-1);
+		if (s_bufidx >= s_buflen)
+		{
+			s_buflen = read(fd, s_buffer, READ_BUFFER_SIZE);
+			if (s_buflen == -1)
+				return (-1);
+			s_bufidx = 0;
+		}
+		chr = s_buffer[s_bufidx++];
 
 		if (strlen == (ssize_t)*len_p)
 		{
