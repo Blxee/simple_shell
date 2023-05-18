@@ -123,3 +123,22 @@ void fork_process(
 			exit(WEXITSTATUS(child_ret));
 	}
 }
+/**
+ * handle_exit - checks if a cmd is exit, and exit with status
+ * @cmd: a constant pointer to a character
+ * Return: 1 if cmd is exit and successful, 0 otherwise.
+ */
+int handle_exit(char *cmd)
+{
+	char *status;
+	int exit_status;
+	
+	if (_strncmp(cmd, "exit", 4) == 0)
+	{
+		status = cmd + 5; /* skips "exit " part of the command */ 
+		exit_status = _atoi(status);
+		exit(exit_status);
+		return (1);
+	}
+	return (0);
+}
