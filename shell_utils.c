@@ -132,10 +132,10 @@ int handle_exit(char *cmd)
 {
 	char *status;
 	int exit_status;
-	
+
 	if (_strncmp(cmd, "exit", 4) == 0)
 	{
-		status = cmd + 5; /* skips "exit " part of the command */ 
+		status = cmd + 5; /* skips "exit " part of the command */
 		exit_status = _atoi(status);
 		exit(exit_status);
 		return (1);
