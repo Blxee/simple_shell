@@ -19,6 +19,8 @@ void fork_process(int is_interactive,
 		char line[],
 		char *program_name);
 int check_env(char *cmd, char **envp);
+void check_setenv(char **args, char **envp);
+void check_unsetenv(char **args, char **envp);
 /* io utils */
 unsigned int _strlen(char *str);
 int _writestr(char *str);

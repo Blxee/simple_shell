@@ -10,10 +10,7 @@
  */
 int _writestr(char *str)
 {
-	unsigned int len = 0;
-
-	while (str[len])
-		len++;
+	unsigned int len = _strlen(str);
 
 	return (write(STDOUT_FILENO, str, len));
 }
