@@ -18,11 +18,12 @@ int check_env(char *cmd, char **envp);
 /* io utils */
 unsigned int _strlen(char *str);
 int _writestr(char *str);
+ssize_t _getline(char **lineptr, size_t *n, int fd);
 /* string utils */
 int _strncmp(char *str1, char *str2, unsigned int n);
 char *_strcat(char *dest, const char *src);
 int _strcmp(char *s1, char *s2);
 char *_strcpy(char *dest, const char *src);
-ssize_t _getline(char **lineptr, size_t *n, int fd);
+char *_strtok(char *str, char *delim);
 
 #endif /* !MAIN_H */

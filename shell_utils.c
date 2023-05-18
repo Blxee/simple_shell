@@ -1,6 +1,5 @@
 #include "main.h"
 #include <unistd.h>
-#include <string.h>
 #include <stdlib.h>
 #include <sys/wait.h>
 
@@ -34,7 +33,7 @@ int handle_path(char *cmd, char *envp[])
 	if (path && path[0] != '\0')
 	{
 		/* search PATH for file */
-		dir = strtok(path, ":");
+		dir = _strtok(path, ":");
 		while (dir)
 		{ /* go through each directory in PATH */
 			_strcpy(cmd, dir);
@@ -42,7 +41,7 @@ int handle_path(char *cmd, char *envp[])
 			_strcat(cmd, cmd_cpy);
 			if (access(cmd, F_OK) == 0) /* if file exists */
 				return (1);
-			dir = strtok(NULL, ":");
+			dir = _strtok(NULL, ":");
 		}
 	}
 	return (0);
@@ -77,7 +76,7 @@ void parse_cmd(char cmd[], char *args[], char *line)
 	unsigned int i = 0;
 	char *token;
 
-	token = strtok(line, " \t\n");
+	token = _strtok(line, " \t\n");
 
 	if (token)
 		_strcpy(cmd, token); /* set cmd to be the first token */
@@ -85,7 +84,7 @@ void parse_cmd(char cmd[], char *args[], char *line)
 	while (token)
 	{
 		args[i++] = token;
-		token = strtok(NULL, " \t\n");
+		token = _strtok(NULL, " \t\n");
 	}
 
 	args[0] = cmd; /* set the first arg to the program name */

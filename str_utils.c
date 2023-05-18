@@ -1,22 +1,6 @@
 #include "main.h"
 
 /**
- * _strlen - determines the length of a string
- *
- * @str: a string of chars
- *
- * Return: the length of @str
- */
-unsigned int _strlen(char *str)
-{
-	unsigned int len = 0;
-
-	while (str[len])
-		len++;
-	return (len);
-}
-
-/**
  * _strncmp - compares two strings
  *
  * @str1: the first string
@@ -105,4 +89,55 @@ char *_strcpy(char *dest, const char *src)
 			*tmp++ = *src;
 		} while (*src++);
 	return (dest);
+}
+
+/**
+ * _strtok - splits string into tokens based on delimeter
+ *
+ * @str: the string to tokenize
+ * @delim: string containing the delimeters
+ *
+ * Return: a pointer to the next token
+ */
+char *_strtok(char *str, char *delim)
+{
+	static char *pre;
+	char *d_chr, *s_chr, *token;
+	int brk_loop;
+
+	if (str)
+		pre = str;
+	else if (!pre)
+		return (NULL);
+	token = pre;
+	while (*token)
+	{
+		brk_loop = 1;
+		for (d_chr = delim; *d_chr; d_chr++)
+			if (*token == *d_chr)
+			{
+				token++;
+				brk_loop = 0;
+				break;
+			}
+		if (brk_loop)
+			break;
+	}
+	if (*token == '\0')
+		return (NULL);
+	for (s_chr = token; *s_chr; s_chr++)
+	{
+		brk_loop = 0;
+		for (d_chr = delim; *d_chr; d_chr++)
+			if (*s_chr == *d_chr)
+			{
+				*s_chr = '\0';
+				pre = s_chr + 1;
+				brk_loop = 1;
+				break;
+			}
+		if (brk_loop)
+			break;
+	}
+	return (token);
 }

@@ -10,7 +10,10 @@
  */
 int _writestr(char *str)
 {
-	unsigned int len = _strlen(str);
+	unsigned int len = 0;
+
+	while (str[len])
+		len++;
 
 	return (write(STDOUT_FILENO, str, len));
 }
@@ -46,7 +49,6 @@ ssize_t _getline(char **line_p, size_t *len_p, int fd)
 		{
 			*len_p *= 2;
 			new_p = malloc(*len_p * sizeof(char));
-
 			if (new_p == NULL)
 				return (-1);
 			strcpy(new_p, *line_p);
