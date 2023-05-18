@@ -1,6 +1,23 @@
 #include "main.h"
 
 /**
+ * _strlen - determines the length of a string
+ *
+ * @str: the string which size is to be determined
+ *
+ * Return: the length of @str
+ */
+unsigned int _strlen(char *str)
+{
+	unsigned int len = 0;
+
+	if (str)
+		while (str[len])
+			len++;
+	return (len);
+}
+
+/**
  * _atoi - Converts a string to an integer.
  * @s: The pointer to a character
  * Return: An integer.
