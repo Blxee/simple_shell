@@ -125,17 +125,17 @@ void fork_process(
 }
 /**
  * handle_exit - checks if a cmd is exit, and exit with status
- * @cmd: a constant pointer to a character
+ * @args: the command from the user and its arguments
  * Return: 1 if cmd is exit and successful, 0 otherwise.
  */
-int handle_exit(char *cmd)
+int handle_exit(char **args)
 {
 	char *status;
 	int exit_status;
 
-	if (_strncmp(cmd, "exit", 4) == 0)
+	if (_strcmp(args[0], "exit") == 0)
 	{
-		status = cmd + 5; /* skips "exit " part of the command */
+		status = args[1]; /* skips "exit " part of the command */
 		exit_status = _atoi(status);
 		exit(exit_status);
 		return (1);

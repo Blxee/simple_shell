@@ -10,7 +10,7 @@
 #define INIT_READ_SIZE 128
 
 /* custom_commands */ 
-int handle_exit(char *cmd);
+int handle_exit(char **args);
 int handle_path(char *cmd, char *envp[]);
 void child_process(char *cmd, char *args[], char *program_name);
 void parse_cmd(char cmd[], char *args[], char *line);

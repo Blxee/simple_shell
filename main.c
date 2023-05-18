@@ -30,7 +30,7 @@ int main(int argc, char *argv[], char *envp[])
 		else if (read_bytes == 0)
 			continue;
 		parse_cmd(cmd, args, line);
-		if (handle_exit(cmd))
+		if (handle_exit(args))
 			break;
 		if (check_env(cmd, envp))
 			continue;
