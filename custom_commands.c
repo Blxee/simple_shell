@@ -44,6 +44,7 @@ void check_setenv(char **args, char **envp)
 		if (var && value && !args[3])
 		{ /* the arguments to setenv were correct */
 			varlen = _strlen(var);
+			var[varlen++] = '=';
 			/* newvar = malloc((varlen + _strlen(value) + 2) * sizeof(char)); */
 			while (envp[i])
 			{ /* iterate through all environment variables */
@@ -77,6 +78,7 @@ void check_unsetenv(char **args, char **envp)
 		if (var && !args[2])
 		{ /* the arguments to unsetenv were correct */
 			varlen = _strlen(var);
+			var[varlen++] = '=';
 			while (envp[i])
 			{ /* iterate through all environment variables */
 				if (_strncmp(envp[i], var, varlen) != 0)
