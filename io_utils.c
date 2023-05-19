@@ -37,7 +37,7 @@ ssize_t _getline(char **line_p, size_t *len_p, int fd)
 	if (*line_p == NULL || *len_p == 0)
 	{
 		*len_p = INIT_READ_SIZE;
-		*line_p = malloc(*len_p * sizeof(char));
+		*line_p = alloc_mem(*len_p * sizeof(char));
 		if (*line_p == NULL)
 			return (-1);
 	}
@@ -52,18 +52,16 @@ ssize_t _getline(char **line_p, size_t *len_p, int fd)
 			s_bufidx = 0;
 		}
 		chr = s_buffer[s_bufidx++];
-
 		if (strlen == (ssize_t)*len_p)
 		{
 			*len_p *= 2;
-			new_p = malloc(*len_p * sizeof(char));
+			new_p = alloc_mem(*len_p * sizeof(char));
 			if (new_p == NULL)
 				return (-1);
 			_strcpy(new_p, *line_p);
-			free(*line_p);
+			free_mem(*line_p);
 			*line_p = new_p;
 		}
-
 		(*line_p)[strlen++] = chr;
 	}
 

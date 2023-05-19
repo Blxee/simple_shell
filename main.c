@@ -19,6 +19,7 @@ int main(int argc, char *argv[], char *envp[])
 	ssize_t read_bytes;
 	int is_interactive = isatty(STDOUT_FILENO) && isatty(STDIN_FILENO);
 
+	*get_program_name() = argv[0];
 	(void)argc;
 	while (1)
 	{
@@ -36,11 +37,12 @@ int main(int argc, char *argv[], char *envp[])
 			continue;
 		if (!handle_path(cmd, envp))
 		{
-			free(line);
+			free_all();
 			perror(argv[0]);
 			continue;
 		}
-		fork_process(is_interactive, args, line, argv[0]);
+		fork_process(is_interactive, args, line);
 	}
+	free_all();
 	return (0);
 }

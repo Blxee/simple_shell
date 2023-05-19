@@ -4,6 +4,11 @@
 #include <unistd.h>
 #include <stdio.h>
 
+#ifdef MEM_ARRAY_SIZE
+#undef MEM_ARRAY_SIZE
+#endif /* !MEM_ARRAY_SIZE */
+#define MEM_ARRAY_SIZE 128
+
 #ifdef READ_BUFFER_SIZE
 #undef READ_BUFFER_SIZE
 #endif /* !READ_BUFFER_SIZE */
@@ -17,17 +22,19 @@
 /* custom_commands */ 
 int handle_exit(char **args);
 int handle_path(char *cmd, char *envp[]);
-void child_process(char *cmd, char *args[], char *program_name);
+void child_process(char *cmd, char *args[]);
 void parse_cmd(char cmd[], char *args[], char *line);
 void fork_process(int is_interactive,
 		char *args[],
-		char line[],
-		char *program_name);
+		char line[]);
 int check_env(char *cmd, char **envp);
+char **get_program_name(void);
+
 /* io utils */
 unsigned int _strlen(char *str);
 int _writestr(char *str);
 ssize_t _getline(char **lineptr, size_t *n, int fd);
+
 /* string utils */
 int _atoi(char *s);
 int _strncmp(char *str1, char *str2, unsigned int n);
@@ -35,5 +42,10 @@ char *_strcat(char *dest, const char *src);
 int _strcmp(char *s1, char *s2);
 char *_strcpy(char *dest, const char *src);
 char *_strtok(char *str, char *delim);
+
+/* memory utils */
+void *alloc_mem(unsigned long size);
+void free_mem(void *ptr);
+void free_all(void);
 
 #endif /* !MAIN_H */
