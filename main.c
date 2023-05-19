@@ -28,7 +28,7 @@ int main(int argc, char *argv[], char *envp[])
 		read_bytes = _getline(&line, &mem_len, STDIN_FILENO);
 		if (read_bytes == -1)
 			break;
-		else if (read_bytes == 0)
+		else if (read_bytes == 1)
 			continue;
 		parse_cmd(cmd, args, line);
 		if (handle_exit(args))

@@ -103,7 +103,6 @@ char *_strtok(char *str, char *delim)
 {
 	static char *pre;
 	char *d_chr, *s_chr, *token;
-	int brk_loop;
 
 	if (str)
 		pre = str;
@@ -112,7 +111,8 @@ char *_strtok(char *str, char *delim)
 	token = pre;
 	while (*token)
 	{
-		brk_loop = 1;
+		int brk_loop = 1;
+
 		for (d_chr = delim; *d_chr; d_chr++)
 			if (*token == *d_chr)
 			{
@@ -123,21 +123,20 @@ char *_strtok(char *str, char *delim)
 		if (brk_loop)
 			break;
 	}
-	if (*token == '\0')
-		return (NULL);
-	for (s_chr = token; *s_chr; s_chr++)
+	for (s_chr = token; ; s_chr++)
 	{
-		brk_loop = 0;
 		for (d_chr = delim; *d_chr; d_chr++)
-			if (*s_chr == *d_chr)
+			if (*s_chr == '\0' || *s_chr == *d_chr)
 			{
 				*s_chr = '\0';
 				pre = s_chr + 1;
-				brk_loop = 1;
-				break;
+				if (!*token)
+				{
+					pre = NULL;
+					return (NULL);
+				}
+				return (token);
 			}
-		if (brk_loop)
-			break;
 	}
-	return (token);
+	return (NULL);
 }
