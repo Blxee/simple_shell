@@ -53,7 +53,6 @@ int handle_path(char *cmd, char *envp[])
  *
  * @cmd: the command to run in this child process
  * @args: the command argument arrays (NULL terminated)
- * @program_name: the name of the main program (argv[0])
  */
 void child_process(char *cmd, char *args[])
 {
@@ -98,7 +97,6 @@ void parse_cmd(char cmd[], char *args[], char *line)
  * @is_interactive: boolean represents whether this is interactive session
  * @args: arguments to pass to execve syscall
  * @line: the input line to be freed when errors happen
- * @program_name: the name of the current program
  */
 void fork_process(
 		int is_interactive,

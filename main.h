@@ -29,8 +29,9 @@ void fork_process(int is_interactive,
 		char line[]);
 int check_env(char *cmd, char **envp);
 char **get_program_name(void);
-void check_setenv(char **args, char **envp);
-void check_unsetenv(char **args, char **envp);
+int check_setenv(char **args, char **envp);
+int check_unsetenv(char **args, char **envp);
+int check_custom_commands(char **args, char **envp);
 
 /* io utils */
 unsigned int _strlen(char *str);
@@ -49,5 +50,6 @@ char *_strtok(char *str, char *delim);
 void *alloc_mem(unsigned long size);
 void free_mem(void *ptr);
 void free_all(void);
+int is_allocated(void *ptr);
 
 #endif /* !MAIN_H */

@@ -40,6 +40,30 @@ void *alloc_mem(unsigned long size)
 }
 
 /**
+ * is_allocated - determines whether an address is heap allocated
+ *
+ * @ptr: the address to check
+ *
+ * Return: 1 id @ptr was found in mem_array and 0 if not
+ */
+int is_allocated(void *ptr)
+{
+	void **mem_array = get_mem_array();
+	unsigned int i = 0;
+
+	if (ptr)
+	{
+		while (i < MEM_ARRAY_SIZE)
+		{
+			if (mem_array[i] == ptr)
+				return (1);
+			i++;
+		}
+	}
+	return (0);
+}
+
+/**
  * free_mem - improved free(), only frees memory once
  *
  * @ptr: the address of the memory to be freed

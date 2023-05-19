@@ -30,36 +30,50 @@ int check_env(char *cmd, char **envp)
  *
  * @args: the command (of the user) and its arguments
  * @envp: the environment variable vector
+ *
+ * Return: whether the command was setenv
  */
-void check_setenv(char **args, char **envp)
+int check_setenv(char **args, char **envp)
 { /* NOTE: this function is still unfinished */
-	unsigned int i = 0, varlen;
-	char *cmd = args[0],
-		*var = args[1],
-		*value = args[2];
-		/* *newvar; */
+	unsigned int varlen;
+	char *cmd = args[0], *var = args[1],
+		*value = args[2], *newvar;
 
 	if (cmd && _strcmp(cmd, "setenv") == 0)
 	{ /* the command was setenv */
 		if (var && value && !args[3])
 		{ /* the arguments to setenv were correct */
 			varlen = _strlen(var);
+			newvar = alloc_mem((varlen + _strlen(value) + 2) * sizeof(char));
+			_strcpy(newvar, var);
+			_strcpy(newvar + varlen, "=");
+			_strcpy(newvar + varlen + 1, value);
 			var[varlen++] = '=';
-			/* newvar = malloc((varlen + _strlen(value) + 2) * sizeof(char)); */
-			while (envp[i])
+			while (*envp)
 			{ /* iterate through all environment variables */
-
-				if (_strncmp(envp[i], var, varlen) != 0)
+				if (_strncmp(*envp, var, varlen) == 0)
 				{ /* the variable to be set exists */
-					/* TODO: update the variable */
-					return;
+					if (is_allocated(*envp))
+						free_mem(*envp);
+					*envp = newvar;
+					return (1);
 				}
-				i++;
+				envp++;
 			}
 			/* the variable does not exist, so it should be added */
-			/* TODO: add the new variable */
+			*envp++ = newvar;
+			*envp = NULL;
+			return (1);
 		}
+		else if (!args[1]) /* if setenv is without args just print the envp vector */
+			while (*envp)
+			{
+				_writestr(*envp);
+				_writestr("\n");
+				envp++;
+			}
 	}
+	return (0);
 }
 
 /**
@@ -67,8 +81,10 @@ void check_setenv(char **args, char **envp)
  *
  * @args: the command (of the user) and its arguments
  * @envp: the environment variable vector
+ *
+ * Return: whether the command was unsetenv
  */
-void check_unsetenv(char **args, char **envp)
+int check_unsetenv(char **args, char **envp)
 {
 	unsigned int i = 0, varlen;
 	char *cmd = args[0], *var = args[1];
@@ -81,16 +97,17 @@ void check_unsetenv(char **args, char **envp)
 			var[varlen++] = '=';
 			while (envp[i])
 			{ /* iterate through all environment variables */
-				if (_strncmp(envp[i], var, varlen) != 0)
+				if (_strncmp(envp[i], var, varlen) == 0)
 				{ /* the variable to be unset was found */
 					do { /* offset all the next environment variables by 1 */
 						envp[i] = envp[i + 1];
 						i++;
 					} while (envp[i]);
-					return;
+					return (1);
 				}
 				i++;
 			}
 		}
 	}
+	return (0);
 }
