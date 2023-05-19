@@ -34,10 +34,9 @@ int check_env(char *cmd, char **envp)
  * Return: whether the command was setenv
  */
 int check_setenv(char **args, char **envp)
-{ /* NOTE: this function is still unfinished */
+{
 	unsigned int varlen;
-	char *cmd = args[0], *var = args[1],
-		*value = args[2], *newvar;
+	char *cmd = args[0], *var = args[1], *value = args[2], *newvar;
 
 	if (cmd && _strcmp(cmd, "setenv") == 0)
 	{ /* the command was setenv */
@@ -66,12 +65,15 @@ int check_setenv(char **args, char **envp)
 			return (1);
 		}
 		else if (!args[1]) /* if setenv is without args just print the envp vector */
+		{
 			while (*envp)
 			{
 				_writestr(*envp);
 				_writestr("\n");
 				envp++;
 			}
+			return (1);
+		}
 	}
 	return (0);
 }
