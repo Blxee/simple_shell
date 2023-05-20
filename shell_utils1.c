@@ -53,13 +53,13 @@ int handle_path(char *cmd, char *envp[])
  *
  * @cmd: the command to run in this child process
  * @args: the command argument arrays (NULL terminated)
- * @program_name: the name of the main program (argv[0])
  */
-void child_process(char *cmd, char *args[], char *program_name)
+void child_process(char *cmd, char *args[])
 {
 	if (execve(cmd, args, NULL) == -1)
 	{ /* exec failed (cmd not found) */
-		perror(program_name);
+		free_all();
+		perror(*get_program_name());
 		exit(127);
 	}
 }
@@ -97,24 +97,23 @@ void parse_cmd(char cmd[], char *args[], char *line)
  * @is_interactive: boolean represents whether this is interactive session
  * @args: arguments to pass to execve syscall
  * @line: the input line to be freed when errors happen
- * @program_name: the name of the current program
  */
 void fork_process(
 		int is_interactive,
 		char *args[],
-		char line[],
-		char *program_name)
+		char line[])
 {
 	int fork_ret, child_ret;
 
 	fork_ret = fork();
 	if (fork_ret == -1)
 	{ /* fork failed */
-		perror(program_name);
+		free_all();
+		perror(*get_program_name());
 		exit(127);
 	}
 	if (fork_ret == 0) /* child process */
-		child_process(args[0], args, program_name);
+		child_process(args[0], args);
 	else
 	{ /* main process */
 		wait(&child_ret); /* wait for the child process */
@@ -123,19 +122,20 @@ void fork_process(
 			exit(WEXITSTATUS(child_ret));
 	}
 }
+
 /**
  * handle_exit - checks if a cmd is exit, and exit with status
- * @cmd: a constant pointer to a character
+ * @args: the command from the user and its arguments
  * Return: 1 if cmd is exit and successful, 0 otherwise.
  */
-int handle_exit(char *cmd)
+int handle_exit(char **args)
 {
 	char *status;
 	int exit_status;
 
-	if (_strncmp(cmd, "exit", 4) == 0)
+	if (_strcmp(args[0], "exit") == 0)
 	{
-		status = cmd + 5; /* skips "exit " part of the command */
+		status = args[1] ? args[1] : "0";
 		exit_status = _atoi(status);
 		exit(exit_status);
 		return (1);
