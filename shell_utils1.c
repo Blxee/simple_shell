@@ -73,20 +73,49 @@ void child_process(char *cmd, char *args[])
  */
 void parse_cmd(char cmd[], char *args[], char *line)
 {
-	unsigned int i = 0;
-	char *token;
+	int i = 0, quote_idx;
+	char *token, *quoted_strings[128], **quote = quoted_strings;
 
+	get_quoted_strings(&line, quoted_strings);
+	// while (*quote)
+	// {
+	// 	printf("qo: [%s]\n", *quote++);
+	// }
+	// return;
 	token = _strtok(line, " \t\n");
-
 	if (token)
-		_strcpy(cmd, token); /* set cmd to be the first token */
-
-	while (token)
 	{
-		args[i++] = token;
-		token = _strtok(NULL, " \t\n");
-	}
+		quote_idx = find_chars(token, "\"'");
+		if (quote_idx != -1)
+		{
+			char *left_token = token, *right_token = token + quote_idx + 1;
 
+			token[quote_idx] = '\0';
+			token = alloc_mem(_strlen(left_token) + _strlen(*quote)
+					+ _strlen(right_token) + 1);
+			_strcpy(token, left_token);
+			_strcat(token, *quote++);
+			_strcat(token, right_token);
+		}
+		_strcpy(cmd, token); /* set cmd to be the first token */
+		args[i++] = token;
+	}
+	while ((token = _strtok(NULL, " \t\n")))
+	{
+		quote_idx = find_chars(token, "\"'");
+		if (quote_idx != -1)
+		{
+			char *left_token = token, *right_token = token + quote_idx + 1;
+
+			token[quote_idx] = '\0';
+			token = alloc_mem(_strlen(left_token) + _strlen(*quote)
+					+ _strlen(right_token) + 1);
+			_strcpy(token, left_token);
+			_strcat(token, *quote++);
+			_strcat(token, right_token);
+		}
+		args[i++] = token;
+	}
 	args[0] = cmd; /* set the first arg to the program name */
 	args[i] = NULL; /*set the last element to NULL*/
 }

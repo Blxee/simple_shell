@@ -50,3 +50,30 @@ int _atoi(char *s)
 	integer = integer * sign;
 	return (integer);
 }
+
+/**
+ * find_chars - searches for characters in a string
+ *
+ * @str: the string to search
+ * @chars: characters to look for
+ *
+ * Return: the index of first occurence of any char
+ */
+int find_chars(char *str, char *chars)
+{
+	int i = 0, j;
+
+  if (str && chars)
+    while (str[i])
+    {
+      j = 0;
+      while (chars[j])
+      {
+        if (str[i] == chars[j])
+        	return (i);
+        j++;
+      }
+      i++;
+    }
+  return (-1);
+}
