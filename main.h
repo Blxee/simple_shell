@@ -34,8 +34,7 @@ int check_unsetenv(char **args, char **envp);
 int check_custom_commands(char **args, char **envp);
 
 /* io utils */
-unsigned int _strlen(char *str);
-int _writestr(char *str);
+int _writestr(int fd, char *str);
 ssize_t _getline(char **lineptr, size_t *n, int fd);
 
 /* string utils */
@@ -45,6 +44,7 @@ char *_strcat(char *dest, const char *src);
 int _strcmp(char *s1, char *s2);
 char *_strcpy(char *dest, const char *src);
 char *_strtok(char *str, char *delim);
+unsigned int _strlen(char *str);
 
 /* memory utils */
 void *alloc_mem(unsigned long size);

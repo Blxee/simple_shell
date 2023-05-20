@@ -24,7 +24,7 @@ int main(int argc, char *argv[], char *envp[])
 	while (1)
 	{
 		if (is_interactive)
-			_writestr("$ ");
+			_writestr(STDOUT_FILENO, "$ ");
 		read_bytes = _getline(&line, &mem_len, STDIN_FILENO);
 		if (read_bytes == -1)
 			break;
