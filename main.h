@@ -53,11 +53,14 @@ char *_strcpy(char *dest, const char *src);
 char *_strtok(char *str, char *delim);
 unsigned int _strlen(char *str);
 int find_chars(char *str, char *chars);
+int _isdigit(int c);
 
 /* memory utils */
 void *alloc_mem(unsigned long size);
 void free_mem(void *ptr);
 void free_all(void);
 int is_allocated(void *ptr);
+
+/* error messages */
 
 #endif /* !MAIN_H */

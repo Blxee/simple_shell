@@ -121,13 +121,14 @@ int check_unsetenv(char **args, char **envp)
  */
 char *_getenv(char *var, char **envp)
 {
-	int i, var_len;
+	size_t var_len;
 	
 	var_len = _strlen(var);
-	for (i = 0; envp[i] != NULL; i++)
+	while (*envp != NULL)
 	{
-		if (_strncmp(envp[i], var, var_len) == 0)
-			return (envp[i]);
+		if (_strncmp(*envp, var, var_len) == 0 && (*envp)[var_len] == '=')
+			return (*envp +  var_len + 1);
+		envp++;
 	}
 	return (NULL);
 }
@@ -157,13 +158,22 @@ int update_pwd(char **envp)
 	char *cwd = get_cwd();
 	char *pwd_var = _getenv("PWD", envp);
 	if (!cwd)
-		return (-1);
-	if (!pwd_var)
 	{
-		perror("update_pwd error");
+		fprintf(stderr, "Failde to get current working directory\n");
 		return (-1);
 	}
-	_strcpy(pwd_var, cwd);return (0);
+	if (!pwd_var)
+	{
+		fprintf(stderr, "PWD variable not found in environment\n");
+		return (-1);
+	}
+	if (_strlen(cwd) >= sizeof(pwd_var))
+	{
+		fprintf(stderr, "PWD buffer is not large enough to store the cwd\n");
+		return (-1);	
+	}
+	_strcpy(pwd_var, cwd);
+	return (0);
 }
 /**
  * check_cd - checks if the command is the built-in commad cd
@@ -198,8 +208,8 @@ int check_cd(char **args, char **envp)
 				return (-1);
 			}
 			directory = oldpwd;
-			_writestr(STDOUT_FILENO, directory);
-			_writestr(STDOUT_FILENO, "\n");
+			write(STDOUT_FILENO, directory, _strlen(directory));
+			write(STDOUT_FILENO, "\n", 1);
 		}
 		if (chdir(directory) != 0)
 		{
