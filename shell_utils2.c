@@ -32,6 +32,8 @@ int check_custom_commands(char **args, char **envp)
 		return (1);
 	if (check_unsetenv(args, envp))
 		return (1);
+	if (check_cd(args, envp))
+		return (1);
 	return (0);
 }
 
@@ -75,7 +77,7 @@ void get_quoted_strings(char **line, char **quoted_strings)
 		/* append quoted str to quoted_strings */
 		*quoted_strings = alloc_mem(quote_end - quote_start);
 		(*line + search_mark)[quote_end] = '\0';
-		strcpy(*quoted_strings, *line + search_mark + quote_start + 1);
+		_strcpy(*quoted_strings, *line + search_mark + quote_start + 1);
 		(*line + search_mark)[quote_end] = *quote;
 		/* replace it with single quote */
 		_strcpy(*line + search_mark + quote_start, *line + search_mark + quote_end);

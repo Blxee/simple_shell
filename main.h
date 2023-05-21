@@ -35,6 +35,10 @@ int check_env(char *cmd, char **envp);
 char **get_program_name(void);
 int check_setenv(char **args, char **envp);
 int check_unsetenv(char **args, char **envp);
+char *_getenv(char *var, char **envp);
+char *get_cwd();
+int update_pwd(char **envp);
+int check_cd(char **args, char **envp);
 
 /* io utils */
 int _writestr(int fd, char *str);

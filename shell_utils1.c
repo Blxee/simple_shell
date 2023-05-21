@@ -77,11 +77,11 @@ void parse_cmd(char cmd[], char *args[], char *line)
 	char *token, *quoted_strings[128], **quote = quoted_strings;
 
 	get_quoted_strings(&line, quoted_strings);
-	// while (*quote)
-	// {
-	// 	printf("qo: [%s]\n", *quote++);
-	// }
-	// return;
+	/* while (*quote)*/
+	/* {*/
+	/* 	printf("qo: [%s]\n", *quote++);*/
+	/* }*/
+	/* return;*/
 	token = _strtok(line, " \t\n");
 	if (token)
 	{
