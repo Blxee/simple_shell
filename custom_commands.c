@@ -73,7 +73,7 @@ int check_setenv(char **args, char **envp)
 				envp++;
 			}
 			return (1);
-		}
+		}	
 	}
 	return (0);
 }
@@ -112,4 +112,80 @@ int check_unsetenv(char **args, char **envp)
 		}
 	}
 	return (0);
+}
+/**
+ * get_cwd - gets the current working dir
+ *
+ * Return: 0 in success, 1 in failure
+ */
+char *get_cwd()
+{
+	static char cwd[256];
+
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+	{
+		perror("getcwd() error");
+		return (NULL);
+	}
+	return (cwd);
+}
+/**
+ * update_pwd - updates the environment variable PWD
+ *
+ * Return:
+ */
+int update_pwd(char *directory)
+{
+	char cwd[256], *new_pwd = NULL;
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+	{
+		perror("getcwd() error");
+		return (0);
+	}
+	new_pwd = alloc_mem(_strlen("PWD=") + _strlen(cwd) + 1);
+}
+/**
+ * check_cd - checks if the command is the built-in commad cd
+ * @args: the command line array
+ * @envp: the environment variable vector
+ *
+ * Return: an integer
+ */
+int check_cd(char **args, char **envp)
+{
+	char *cmd = args[0], *directory = args[1];
+	char cwd[256];
+
+	if (cmd && _strcmp(cmd, "cd") == 0)
+	{/* if the user entred the command cd*/
+		if (!directory)
+		{
+			directory = getenv("HOME");
+			if (!directory)
+			{
+				perror("cd");
+				return (1);
+			}
+		}
+		else if (_strcmp(directory, "-") == 0)
+		{
+			directory = getenv("OLDPWD");
+			if (!directory)
+			{
+				perror("cd");
+				return (1);
+			}
+			_writestr(directory);
+			_writestr("\n");
+		}
+		if (getcwd(cwd, sizeof(cwd)) == NULL)
+		{
+			perror("cd");
+			return (1);
+		}
+		for (i = 0; envp[i] != NULL; i++)
+		{
+
+		}
+	}
 }
