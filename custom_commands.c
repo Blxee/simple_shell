@@ -26,6 +26,28 @@ int check_env(char *cmd, char **envp)
 }
 
 /**
+ * _getenv - retrieves an environment variable from envp
+ *
+ * @var: the name of the variable
+ * @envp: the environment variable vector
+ *
+ * Return: the address of that variable if it was found, NULL if not
+ */
+char **_getenv(char *var, char **envp)
+{
+	unsigned int varlen = _strlen(var);
+
+	if (var && envp)
+		while (*envp)
+		{ /* iterate through all environment variables */
+			if (_strncmp(*envp, var, varlen) == 0)
+				return (&*envp);
+			envp++;
+		}
+	return (NULL);
+}
+
+/**
  * check_setenv - sets an environment variable if found
  *
  * @args: the command (of the user) and its arguments
@@ -52,8 +74,7 @@ int check_setenv(char **args, char **envp)
 			{ /* iterate through all environment variables */
 				if (_strncmp(*envp, var, varlen) == 0)
 				{ /* the variable to be set exists */
-					if (is_allocated(*envp))
-						free_mem(*envp);
+					free_mem(*envp);
 					*envp = newvar;
 					return (1);
 				}
@@ -113,111 +134,55 @@ int check_unsetenv(char **args, char **envp)
 	}
 	return (0);
 }
-/**
- * _getenv - gets environment variable value
- * @var: the envirement variable name
- * @envp: a pointer to an array of the environment variables
- * Return: the value of the environment variable
- */
-char *_getenv(char *var, char **envp)
-{
-	size_t var_len;
-	
-	var_len = _strlen(var);
-	while (*envp != NULL)
-	{
-		if (_strncmp(*envp, var, var_len) == 0 && (*envp)[var_len] == '=')
-			return (*envp +  var_len + 1);
-		envp++;
-	}
-	return (NULL);
-}
-/**
- * get_cwd - gets the current working dir
- *
- * Return: 0 in success, -1 in failure
- */
-char *get_cwd()
-{
-	static char cwd[256];
 
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
-	{
-		perror("getcwd() error");
-		return (NULL);
-	}
-	return (cwd);
-}
 /**
- * update_pwd - updates the environment variable PWD
- * @envp: a pointer to an array 
- * Return: 0 on success,-1 on failure
- */
-int update_pwd(char **envp)
-{
-	char *cwd = get_cwd();
-	char *pwd_var = _getenv("PWD", envp);
-	if (!cwd)
-	{
-		fprintf(stderr, "Failde to get current working directory\n");
-		return (-1);
-	}
-	if (!pwd_var)
-	{
-		fprintf(stderr, "PWD variable not found in environment\n");
-		return (-1);
-	}
-	if (_strlen(cwd) >= sizeof(pwd_var))
-	{
-		fprintf(stderr, "PWD buffer is not large enough to store the cwd\n");
-		return (-1);	
-	}
-	_strcpy(pwd_var, cwd);
-	return (0);
-}
-/**
- * check_cd - checks if the command is the built-in commad cd
- * @args: the command line array
+ * check_cd - checks whether the command is "cd", if so, it executes it
+ *
+ * @args: the command (of the user) and its arguments
  * @envp: the environment variable vector
  *
- * Return: an integer (0 on success, -1 on failure)
+ * Return: whether the command was "cd"
  */
 int check_cd(char **args, char **envp)
 {
-	char *cmd = args[0], *directory = args[1];
-	char *home, *oldpwd;
+	char *dir = args[1], **oldpwd, **pwd, *oldpwd_cpy = NULL;
+	unsigned int pwdlen, dirlen;
 
-	if (cmd && _strcmp(cmd, "cd") == 0)
-	{/* if the user entred the command cd*/
-		if (!directory)
+	if (_strcmp(args[0], "cd") == 0)
+	{
+		oldpwd = _getenv("OLDPWD", envp);
+		if (!dir || !*dir || _strcmp(dir, "~") == 0)
+			dir = *_getenv("HOME", envp) + 5;
+		else if (_strcmp(dir, "-") == 0)
+			_strcpy(oldpwd_cpy = alloc_mem((_strlen(*oldpwd) + 1)),
+					dir = (*oldpwd + 7));
+		if (chdir(dir) == -1)
+			perror(*get_program_name());
+		pwd = _getenv("PWD", envp);
+		if (oldpwd)
 		{
-			home = _getenv("HOME", envp);
-			if (!home)
+			pwdlen = _strlen(*pwd);
+			if (pwdlen > _strlen(*oldpwd + 3))
 			{
-				perror("cd");
-				return (-1);
+				free_mem(*oldpwd);
+				*oldpwd = alloc_mem(pwdlen * sizeof(char) + 4);
 			}
-			directory = home;
+			_strcpy(*oldpwd, "OLD");
+			_strcat(*oldpwd, *pwd);
 		}
-		else if ( _strcmp(directory, "-") == 0)
+		if (pwd)
 		{
-			oldpwd = _getenv("OLDPWD", envp);
-			if (!oldpwd)
+			dirlen = _strlen(dir);
+			if (dirlen > _strlen(*pwd + 4))
 			{
-				perror("OLDPWD error");
-				return (-1);
+				free_mem(*pwd);
+				*pwd = alloc_mem(dirlen * sizeof(char) + 5);
 			}
-			directory = oldpwd;
-			write(STDOUT_FILENO, directory, _strlen(directory));
-			write(STDOUT_FILENO, "\n", 1);
+			_strcpy(*pwd, "PWD=");
+			_strcat(*pwd, oldpwd_cpy ? oldpwd_cpy : dir);
 		}
-		if (chdir(directory) != 0)
-		{
-			perror("cd");
-			return (-1);
-		}
-		if (update_pwd(envp) != 0)
-			return (-1);
+		free_mem(oldpwd_cpy);
+		return (1);
 	}
 	return (0);
 }

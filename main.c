@@ -35,13 +35,8 @@ int main(int argc, char *argv[], char *envp[])
 			break;
 		if (check_custom_commands(args, envp))
 			continue;
-		if (!handle_path(cmd, envp))
-		{
-			free_all();
-			perror(argv[0]);
-			continue;
-		}
-		fork_process(is_interactive, args, line);
+		fork_process(is_interactive, args, envp);
+		free(line);
 	}
 	free_all();
 	return (0);

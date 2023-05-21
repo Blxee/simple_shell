@@ -55,7 +55,8 @@ void get_quoted_strings(char **line, char **quoted_strings)
 	{ /* while there is another quoted string */
 		*quote = (*line + search_mark)[quote_start];
 
-		while ((quote_end = find_chars((*line + search_mark) + quote_start + 1, quote)) == -1)
+		while ((quote_end =
+					find_chars((*line + search_mark) + quote_start + 1, quote)) == -1)
 		{ /* while the quote is unterminated */
 			char *old_line = *line;
 
@@ -81,8 +82,34 @@ void get_quoted_strings(char **line, char **quoted_strings)
 		(*line + search_mark)[quote_end] = *quote;
 		/* replace it with single quote */
 		_strcpy(*line + search_mark + quote_start, *line + search_mark + quote_end);
-
 		search_mark += quote_start + 1;
 		quoted_strings++;
+	}
+}
+
+/**
+ * next_separator - moves to next command after a separator if it exists
+ *
+ * @next_cmd: pointer to an array of cmd arguments
+ * @sep: an address to store the separator (;, &&, ||) if it was found
+ */
+void next_separator(char ***next_cmd, char *sep)
+{
+	char *separators[] = {";", "&&", "||", NULL};
+	int i;
+
+	while (**next_cmd)
+	{
+		*sep = 0;
+		for (i = 0; separators[i]; i++)
+			if (_strcmp(**next_cmd, separators[i]) == 0)
+			{
+				*sep = separators[i][0];
+				**next_cmd = NULL;
+				break;
+			}
+		(*next_cmd)++;
+		if (*sep)
+			break;
 	}
 }

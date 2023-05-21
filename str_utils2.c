@@ -63,19 +63,19 @@ int find_chars(char *str, char *chars)
 {
 	int i = 0, j;
 
-  if (str && chars)
-    while (str[i])
-    {
-      j = 0;
-      while (chars[j])
-      {
-        if (str[i] == chars[j])
-        	return (i);
-        j++;
-      }
-      i++;
-    }
-  return (-1);
+	if (str && chars)
+		while (str[i])
+		{
+			j = 0;
+			while (chars[j])
+			{
+				if (str[i] == chars[j])
+					return (i);
+				j++;
+			}
+			i++;
+		}
+	return (-1);
 }
 /**
  * _isdigit - check if a character is a digit

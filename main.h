@@ -7,7 +7,7 @@
 #ifdef MEM_ARRAY_SIZE
 #undef MEM_ARRAY_SIZE
 #endif /* !MEM_ARRAY_SIZE */
-#define MEM_ARRAY_SIZE 128
+#define MEM_ARRAY_SIZE 256
 
 #ifdef READ_BUFFER_SIZE
 #undef READ_BUFFER_SIZE
@@ -21,23 +21,21 @@
 
 /* shell utils */
 int handle_exit(char **args);
-int handle_path(char *cmd, char *envp[]);
+int handle_path(char **cmd, char *envp[]);
 void child_process(char *cmd, char *args[]);
 void parse_cmd(char cmd[], char *args[], char *line);
 void fork_process(int is_interactive,
-		char *args[],
-		char line[]);
+		char **args,
+		char *envp[]);
 int check_custom_commands(char **args, char **envp);
 void get_quoted_strings(char **line, char **quoted_strings);
+char **get_program_name(void);
+void next_separator(char ***next_cmd, char *sep);
 
 /* custom_commands */ 
 int check_env(char *cmd, char **envp);
-char **get_program_name(void);
 int check_setenv(char **args, char **envp);
 int check_unsetenv(char **args, char **envp);
-char *_getenv(char *var, char **envp);
-char *get_cwd();
-int update_pwd(char **envp);
 int check_cd(char **args, char **envp);
 
 /* io utils */
@@ -59,7 +57,6 @@ int _isdigit(int c);
 void *alloc_mem(unsigned long size);
 void free_mem(void *ptr);
 void free_all(void);
-int is_allocated(void *ptr);
 
 /* error messages */
 

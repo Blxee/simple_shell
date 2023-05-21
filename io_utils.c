@@ -4,6 +4,7 @@
 /**
  * _writestr - prints a string to stdout
  *
+ * @fd: a file durector to write to
  * @str: a string to print
  *
  * Return: amount chars printed, or -1 if an error occured
