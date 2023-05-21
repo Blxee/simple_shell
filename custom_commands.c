@@ -16,8 +16,8 @@ int check_env(char *cmd, char **envp)
 	{
 		while (*envp)
 		{
-			_writestr(*envp);
-			_writestr("\n");
+			_writestr(STDOUT_FILENO, *envp);
+			_writestr(STDOUT_FILENO, "\n");
 			envp++;
 		}
 		return (1);
@@ -68,8 +68,8 @@ int check_setenv(char **args, char **envp)
 		{
 			while (*envp)
 			{
-				_writestr(*envp);
-				_writestr("\n");
+				_writestr(STDOUT_FILENO, *envp);
+				_writestr(STDOUT_FILENO, "\n");
 				envp++;
 			}
 			return (1);

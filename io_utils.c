@@ -8,11 +8,11 @@
  *
  * Return: amount chars printed, or -1 if an error occured
  */
-int _writestr(char *str)
+int _writestr(int fd, char *str)
 {
 	unsigned int len = _strlen(str);
 
-	return (write(STDOUT_FILENO, str, len));
+	return (write(fd, str, len));
 }
 
 /**
