@@ -94,7 +94,7 @@ int check_setenv(char **args, char **envp)
 				envp++;
 			}
 			return (1);
-		}	
+		}
 	}
 	return (0);
 }
