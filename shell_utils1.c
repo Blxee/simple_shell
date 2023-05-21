@@ -174,7 +174,6 @@ int handle_exit(char **args)
 				write(STDERR_FILENO, err_msg, _strlen(err_msg));
 				write(STDOUT_FILENO, status, _strlen(status));
 				write(STDOUT_FILENO, "\n", 1);
-				perror("exit");
 				return (1);
 			}
 		}
