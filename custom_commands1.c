@@ -123,42 +123,25 @@ int check_unsetenv(char **args, char **envp)
  */
 int check_cd(char **args, char **envp)
 {
-	char *dir = args[1], **oldpwd, **pwd, *oldpwd_cpy = NULL;
-	unsigned int pwdlen, dirlen;
+	char *dir = args[1], *oldpwd, *pwd, *oldpwd_cpy = NULL;
+	char home_name[] = "HOME", oldpwd_name[] = "OLDPWD", pwd_name[] = "PWD";
 
 	if (_strcmp(args[0], "cd") == 0)
 	{
-		oldpwd = _getenv("OLDPWD", envp);
+		oldpwd = _getenv(oldpwd_name, envp) + 7;
 		if (!dir || !*dir || _strcmp(dir, "~") == 0)
-			dir = *_getenv("HOME", envp) + 5;
+			dir = _getenv(home_name, envp) + 5;
 		else if (_strcmp(dir, "-") == 0)
-			_strcpy(oldpwd_cpy = alloc_mem((_strlen(*oldpwd) + 1)),
-					dir = (*oldpwd + 7));
+		{
+			oldpwd_cpy = alloc_mem((_strlen(oldpwd) + 1));
+			dir = oldpwd;
+			_strcpy(oldpwd_cpy, dir);
+		}
 		if (chdir(dir) == -1)
 			perror(*get_program_name());
-		pwd = _getenv("PWD", envp);
-		if (oldpwd)
-		{
-			pwdlen = _strlen(*pwd);
-			if (pwdlen > _strlen(*oldpwd + 3))
-			{
-				free_mem(*oldpwd);
-				*oldpwd = alloc_mem(pwdlen * sizeof(char) + 4);
-			}
-			_strcpy(*oldpwd, "OLD");
-			_strcat(*oldpwd, *pwd);
-		}
-		if (pwd)
-		{
-			dirlen = _strlen(dir);
-			if (dirlen > _strlen(*pwd + 4))
-			{
-				free_mem(*pwd);
-				*pwd = alloc_mem(dirlen * sizeof(char) + 5);
-			}
-			_strcpy(*pwd, "PWD=");
-			_strcat(*pwd, oldpwd_cpy ? oldpwd_cpy : dir);
-		}
+		pwd = _getenv(pwd_name, envp) + 4;
+		_setenv(oldpwd_name, pwd, envp);
+		_setenv(pwd_name, oldpwd_cpy ? oldpwd_cpy : dir, envp);
 		free_mem(oldpwd_cpy);
 		return (1);
 	}

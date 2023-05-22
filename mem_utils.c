@@ -73,16 +73,17 @@ void free_mem(void *ptr)
 	void **mem_array = get_mem_array();
 	unsigned int i = 0;
 
-	while (i < MEM_ARRAY_SIZE)
-	{
-		if (mem_array[i] == ptr)
-		{ /* only free if it is not freed yet */
-			free(ptr);
-			mem_array[i] = NULL;
-			break;
+	if (ptr != NULL)
+		while (i < MEM_ARRAY_SIZE)
+		{
+			if (mem_array[i] == ptr)
+			{ /* only free if it is not freed yet */
+				free(ptr);
+				mem_array[i] = NULL;
+				break;
+			}
+			i++;
 		}
-		i++;
-	}
 }
 
 /**
