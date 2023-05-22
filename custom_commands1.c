@@ -35,32 +35,13 @@ int check_env(char *cmd, char **envp)
  */
 int check_setenv(char **args, char **envp)
 {
-	unsigned int varlen;
-	char *cmd = args[0], *var = args[1], *value = args[2], *newvar;
+	char *cmd = args[0], *var = args[1], *value = args[2];
 
 	if (cmd && _strcmp(cmd, "setenv") == 0)
 	{ /* the command was setenv */
 		if (var && value && !args[3])
 		{ /* the arguments to setenv were correct */
-			varlen = _strlen(var);
-			newvar = alloc_mem((varlen + _strlen(value) + 2) * sizeof(char));
-			_strcpy(newvar, var);
-			_strcpy(newvar + varlen, "=");
-			_strcpy(newvar + varlen + 1, value);
-			var[varlen++] = '=';
-			while (*envp)
-			{ /* iterate through all environment variables */
-				if (_strncmp(*envp, var, varlen) == 0)
-				{ /* the variable to be set exists */
-					free_mem(*envp);
-					*envp = newvar;
-					return (1);
-				}
-				envp++;
-			}
-			/* the variable does not exist, so it should be added */
-			*envp++ = newvar;
-			*envp = NULL;
+			_setenv(var, value, envp);
 			return (1);
 		}
 		else if (!args[1]) /* if setenv is without args just print the envp vector */
