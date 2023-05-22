@@ -33,7 +33,7 @@ char **get_program_name(void);
 void next_separator(char ***next_cmd, char *sep);
 
 /* custom_commands */ 
-char *_getenv(char *var, char **envp);
+char **_getenv(char *var, char **envp);
 char *_setenv(char *var, char **strarr, char **envp);
 int check_env(char *cmd, char **envp);
 int check_setenv(char **args, char **envp);

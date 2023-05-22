@@ -8,7 +8,7 @@
  *
  * Return: the variable if it was found, NULL if not
  */
-char *_getenv(char *var, char **envp)
+char **_getenv(char *var, char **envp)
 {
 	unsigned int varlen = _strlen(var) + 1, i = 0;
 
@@ -19,7 +19,7 @@ char *_getenv(char *var, char **envp)
 		while (*envp)
 		{ /* iterate through all environment variables */
 			if (_strncmp(*envp, var, varlen) == 0)
-				return (*envp);
+				return (&*envp);
 			envp++;
 		}
 	return (NULL);
