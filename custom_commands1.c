@@ -26,28 +26,6 @@ int check_env(char *cmd, char **envp)
 }
 
 /**
- * _getenv - retrieves an environment variable from envp
- *
- * @var: the name of the variable
- * @envp: the environment variable vector
- *
- * Return: the address of that variable if it was found, NULL if not
- */
-char **_getenv(char *var, char **envp)
-{
-	unsigned int varlen = _strlen(var);
-
-	if (var && envp)
-		while (*envp)
-		{ /* iterate through all environment variables */
-			if (_strncmp(*envp, var, varlen) == 0)
-				return (&*envp);
-			envp++;
-		}
-	return (NULL);
-}
-
-/**
  * check_setenv - sets an environment variable if found
  *
  * @args: the command (of the user) and its arguments
