@@ -120,9 +120,16 @@ int check_cd(char **args, char **envp)
 		}
 		if (chdir(dir) == -1)
 			perror(*get_program_name());
+		dir = alloc_mem(513 * sizeof(char));
+		getcwd(dir, 512);
 		pwd = _getenv(pwd_name, envp) + 4;
 		_setenv(oldpwd_name, pwd, envp);
 		_setenv(pwd_name, oldpwd_cpy ? oldpwd_cpy : dir, envp);
+		if (oldpwd_cpy)
+		{
+			_writestr(STDOUT_FILENO, oldpwd_cpy);
+			_writestr(STDOUT_FILENO, "\n");
+		}
 		free_mem(oldpwd_cpy);
 		return (1);
 	}
