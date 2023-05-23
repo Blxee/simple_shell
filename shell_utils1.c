@@ -131,8 +131,8 @@ void fork_process(int is_interactive, char **args, char *envp[])
 		else
 		{ /* main process */
 			wait(&child_ret); /* wait for the child process */
-			*get_last_cmd_status() = child_ret;
 			child_ret = WEXITSTATUS(child_ret);
+			*get_last_cmd_exit() = child_ret;
 			free_mem(args[0]);
 			if (!is_interactive && child_ret != 0)
 				exit(child_ret);

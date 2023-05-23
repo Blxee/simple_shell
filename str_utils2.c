@@ -101,19 +101,19 @@ int _isdigit(int c)
  */
 char *int_to_str(long n)
 {
-	char *str = alloc_mem(128 * sizeof(char));
+	char *str = alloc_mem(129 * sizeof(char));
 	int len = 10, i = 0;
 
-	if (!n)
-	{
-		str[i++] = '0';
-		str[i] = '\0';
-		return (str);
-	}
 	if (n < 0)
 	{
 		n = -n;
 		str[i++] = '-';
+	}
+	if (n < 10)
+	{
+		str[i++] = '0' + n;
+		str[i] = '\0';
+		return (str);
 	}
 	while (n / (len * 10) > 0)
 		len *= 10;
