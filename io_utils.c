@@ -62,8 +62,7 @@ ssize_t _getline(char **line_p, size_t *len_p, int fd)
 		(*line_p)[strlen++] = chr;
 		if ((!(isatty(STDOUT_FILENO) && isatty(STDIN_FILENO))
 					|| fd != STDIN_FILENO)
-				&& s_buflen < READ_BUFFER_SIZE
-				&& s_buflen - s_bufidx == 1)
+				&& s_buflen < READ_BUFFER_SIZE && s_buflen - s_bufidx == 1)
 			break;
 	}
 	(*line_p)[strlen] = '\0';

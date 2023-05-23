@@ -68,10 +68,10 @@ void child_process(char *cmd, char *args[])
 /**
  * parse_cmd - splits command and its arguments
  *
- * @cmd: an array to store the command
  * @args: an array to store the arguments (starting with @cmd)
  * @line: the raw input line fromthe user
  * @envp: the environment variables vector
+ * @stdin_fd: the input file director
  */
 void parse_cmd(char *args[], char *line, char **envp, int stdin_fd)
 {

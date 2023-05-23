@@ -42,6 +42,7 @@ int check_custom_commands(char **args, char **envp)
  *
  * @line: the address of the line to search
  * @quoted_strings: an array to store pointer to quoted strings
+ * @stdin_fd: the input file director
  */
 void get_quoted_strings(char **line, char **quoted_strings, int stdin_fd)
 {
