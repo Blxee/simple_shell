@@ -113,3 +113,29 @@ void next_separator(char ***next_cmd, char *sep)
 			break;
 	}
 }
+
+/**
+ * expand_quote - replaces the quote mark with its corresponding string
+ *
+ * @str: the string where to replace
+ * @quotes: the quotes array
+ */
+void expand_quote(char **str, char ***quotes)
+{
+	int quote_idx;
+
+	while ((quote_idx = find_chars(*str, "\"'")) != -1)
+	{
+		char *left_token = *str, *right_token = *str + quote_idx + 1;
+
+		*str[quote_idx] = '\0';
+		*str = alloc_mem(
+				_strlen(left_token)
+				+ _strlen(**quotes)
+				+ _strlen(right_token) + 1);
+		_strcpy(*str, left_token);
+		_strcat(*str, **quotes);
+		_strcat(*str, right_token);
+		(*quotes)++;
+	}
+}

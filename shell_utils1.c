@@ -71,45 +71,25 @@ void child_process(char *cmd, char *args[])
  * @cmd: an array to store the command
  * @args: an array to store the arguments (starting with @cmd)
  * @line: the raw input line fromthe user
+ * @envp: the environment variables vector
  */
-void parse_cmd(char cmd[], char *args[], char *line)
+void parse_cmd(char cmd[], char *args[], char *line, char **envp)
 {
-	int i = 0, quote_idx;
+	int i = 0;
 	char *token, *quoted_strings[128], **quote = quoted_strings;
 
+	replace_variables(&line, envp);
 	get_quoted_strings(&line, quoted_strings);
 	token = _strtok(line, " \t\n");
 	if (token)
 	{
-		quote_idx = find_chars(token, "\"'");
-		if (quote_idx != -1)
-		{
-			char *left_token = token, *right_token = token + quote_idx + 1;
-
-			token[quote_idx] = '\0';
-			token = alloc_mem(_strlen(left_token) + _strlen(*quote)
-					+ _strlen(right_token) + 1);
-			_strcpy(token, left_token);
-			_strcat(token, *quote++);
-			_strcat(token, right_token);
-		}
+		expand_quote(&token, &quote);
 		_strcpy(cmd, token); /* set cmd to be the first token */
 		args[i++] = token;
 	}
 	while ((token = _strtok(NULL, " \t\n")))
 	{
-		quote_idx = find_chars(token, "\"'");
-		if (quote_idx != -1)
-		{
-			char *left_token = token, *right_token = token + quote_idx + 1;
-
-			token[quote_idx] = '\0';
-			token = alloc_mem(_strlen(left_token) + _strlen(*quote)
-					+ _strlen(right_token) + 1);
-			_strcpy(token, left_token);
-			_strcat(token, *quote++);
-			_strcat(token, right_token);
-		}
+		expand_quote(&token, &quote);
 		args[i++] = token;
 	}
 	args[0] = cmd; /* set the first arg to the program name */
@@ -151,6 +131,7 @@ void fork_process(int is_interactive, char **args, char *envp[])
 		else
 		{ /* main process */
 			wait(&child_ret); /* wait for the child process */
+			*get_last_cmd_status() = child_ret;
 			child_ret = WEXITSTATUS(child_ret);
 			free_mem(args[0]);
 			if (!is_interactive && child_ret != 0)

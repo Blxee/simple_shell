@@ -23,7 +23,7 @@
 int handle_exit(char **args);
 int handle_path(char **cmd, char *envp[]);
 void child_process(char *cmd, char *args[]);
-void parse_cmd(char cmd[], char *args[], char *line);
+void parse_cmd(char cmd[], char *args[], char *line, char **envp);
 void fork_process(int is_interactive,
 		char **args,
 		char *envp[]);
@@ -31,6 +31,9 @@ int check_custom_commands(char **args, char **envp);
 void get_quoted_strings(char **line, char **quoted_strings);
 char **get_program_name(void);
 void next_separator(char ***next_cmd, char *sep);
+void expand_quote(char **str, char ***quotes);
+void replace_variables(char **line, char **envp);
+int *get_last_cmd_status(void);
 
 /* custom_commands */ 
 char *_getenv(char *var, char **envp);
@@ -54,6 +57,7 @@ char *_strtok(char *str, char *delim);
 unsigned int _strlen(char *str);
 int find_chars(char *str, char *chars);
 int _isdigit(int c);
+char *int_to_str(long n);
 
 /* memory utils */
 void *alloc_mem(unsigned long size);

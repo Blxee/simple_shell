@@ -77,17 +77,51 @@ int find_chars(char *str, char *chars)
 		}
 	return (-1);
 }
+
 /**
  * _isdigit - check if a character is a digit
  * @c: char to be checked
  *
  * Return: 1 for a character that will ba a digit or 0 for any else
  */
-
 int _isdigit(int c)
 {
 	if (c >= 48 && c <= 57)
 	return (1);
 	else
 	return (0);
+}
+
+/**
+ * int_to_str - converts integer to string
+ *
+ * @n: the integer to convert
+ *
+ * Return: a string containg @n (allocated)
+ */
+char *int_to_str(long n)
+{
+	char *str = alloc_mem(128 * sizeof(char));
+	int len = 10, i = 0;
+
+	if (!n)
+	{
+		str[i++] = '0';
+		str[i] = '\0';
+		return (str);
+	}
+	if (n < 0)
+	{
+		n = -n;
+		str[i++] = '-';
+	}
+	while (n / (len * 10) > 0)
+		len *= 10;
+	while (len > 0)
+	{
+		str[i++] = n / len % 10 + '0';
+		len /= 10;
+	}
+	str[i] = '\0';
+	return (str);
 }
