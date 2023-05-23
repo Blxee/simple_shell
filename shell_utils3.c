@@ -105,9 +105,9 @@ void replace_variables(char **line, char **envp)
 		linelen += _strlen(var);
 		newline = alloc_mem(linelen + 1);
 		(*line)[sign_idx] = '\0';
-		strcpy(newline, *line);
-		strcat(newline, var);
-		strcat(newline, *line + sign_idx + j + 1);
+		_strcpy(newline, *line);
+		_strcat(newline, var);
+		_strcat(newline, *line + sign_idx + j + 1);
 		offset += _strlen(var) - j - 1;
 		free_mem(var);
 		free_mem(*line);
