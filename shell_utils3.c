@@ -55,7 +55,7 @@ int get_var_value(char *line, int sign_idx, char **envp, char **var)
 	char *value = NULL;
 
 	i = 1;
-	if ((line)[sign_idx + 1] == 255)
+	if ((int)(line)[sign_idx + 1] == -128)
 		(*var) = int_to_str(getpid());
 	else if (line[sign_idx + 1] == '?')
 		(*var) = int_to_str(*get_last_cmd_exit());
@@ -92,7 +92,7 @@ void replace_variables(char **line, char **envp)
 	while ((sign_indices[i] = find_chars(*line, "$")) != -1)
 	{
 		if ((*line)[sign_indices[i] + 1] == '$')
-			(*line)[sign_indices[i] + 1] = 255;
+			(*line)[sign_indices[i] + 1] = -128;
 		(*line)[sign_indices[i++]] = ' ';
 	}
 	for (i = 0; (sign_idx = sign_indices[i]) != -1; i++)
