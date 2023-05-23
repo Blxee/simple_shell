@@ -14,18 +14,23 @@
  */
 int main(int argc, char *argv[], char *envp[])
 {
-	char *line = NULL, cmd[1024], *args[128];
+	char *line = NULL, *args[128];
 	size_t mem_len = 0;
 	ssize_t read_bytes;
 	int is_interactive = isatty(STDOUT_FILENO) && isatty(STDIN_FILENO);
+	int stdin_fd;
 
 	*get_program_name() = argv[0]; /* set the program name static variable */
-	(void)argc;
+	stdin_fd = open_file(argc, argv);
+	if (stdin_fd != -1)
+		is_interactive = 0;
+	else
+		stdin_fd = STDIN_FILENO;
 	while (1)
 	{
 		if (is_interactive)
 			_writestr(STDOUT_FILENO, "$ ");
-		read_bytes = _getline(&line, &mem_len, STDIN_FILENO);
+		read_bytes = _getline(&line, &mem_len, stdin_fd);
 		if (read_bytes == -1)
 			break;
 		else if (read_bytes == 0 || read_bytes == 1)
@@ -35,7 +40,7 @@ int main(int argc, char *argv[], char *envp[])
 			else
 				break;
 		}
-		parse_cmd(cmd, args, line, envp);
+		parse_cmd(args, line, envp, stdin_fd);
 		if (handle_exit(args))
 			break;
 		if (check_custom_commands(args, envp))

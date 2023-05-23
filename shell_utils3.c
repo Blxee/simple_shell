@@ -114,3 +114,27 @@ void replace_variables(char **line, char **envp)
 		*line = newline;
 	}
 }
+
+/**
+ * open_file - tries to open file from arguments given to the program
+ *
+ * @argc: argument count
+ * @argv: argument vector
+ *
+ * Return: the file discriptor, -1 if there was no file arguments
+ */
+int open_file(int argc, char **argv)
+{
+	if (argc >= 2)
+	{
+		int fd = open(argv[1], O_RDONLY);
+
+		if (fd == -1)
+		{
+			perror(*get_program_name());
+			exit(2);
+		}
+		return (fd);
+	}
+	return (-1);
+}

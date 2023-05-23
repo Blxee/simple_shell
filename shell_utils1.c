@@ -73,18 +73,17 @@ void child_process(char *cmd, char *args[])
  * @line: the raw input line fromthe user
  * @envp: the environment variables vector
  */
-void parse_cmd(char cmd[], char *args[], char *line, char **envp)
+void parse_cmd(char *args[], char *line, char **envp, int stdin_fd)
 {
 	int i = 0;
 	char *token, *quoted_strings[128], **quote = quoted_strings;
 
 	replace_variables(&line, envp);
-	get_quoted_strings(&line, quoted_strings);
+	get_quoted_strings(&line, quoted_strings, stdin_fd);
 	token = _strtok(line, " \t\n");
 	if (token)
 	{
 		expand_quote(&token, &quote);
-		_strcpy(cmd, token); /* set cmd to be the first token */
 		args[i++] = token;
 	}
 	while ((token = _strtok(NULL, " \t\n")))
@@ -92,7 +91,6 @@ void parse_cmd(char cmd[], char *args[], char *line, char **envp)
 		expand_quote(&token, &quote);
 		args[i++] = token;
 	}
-	args[0] = cmd; /* set the first arg to the program name */
 	args[i] = NULL; /*set the last element to NULL*/
 }
 

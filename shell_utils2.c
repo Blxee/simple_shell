@@ -43,7 +43,7 @@ int check_custom_commands(char **args, char **envp)
  * @line: the address of the line to search
  * @quoted_strings: an array to store pointer to quoted strings
  */
-void get_quoted_strings(char **line, char **quoted_strings)
+void get_quoted_strings(char **line, char **quoted_strings, int stdin_fd)
 {
 	char quote[2], *new_line;
 	int quote_start, quote_end, search_mark = 0,
@@ -62,7 +62,7 @@ void get_quoted_strings(char **line, char **quoted_strings)
 
 			if (is_interactive)
 				_writestr(STDOUT_FILENO, "> ");
-			new_line_len = _getline(&new_line, &new_line_mem, STDIN_FILENO);
+			new_line_len = _getline(&new_line, &new_line_mem, stdin_fd);
 			if (new_line_len == -1)
 			{
 				perror(*get_program_name());
