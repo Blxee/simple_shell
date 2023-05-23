@@ -44,6 +44,8 @@ int check_env(char *cmd, char **envp);
 int check_setenv(char **args, char **envp);
 int check_unsetenv(char **args, char **envp);
 int check_cd(char **args, char **envp);
+int check_alias(char **args);
+void replace_aliased(char **cmd);
 
 /* io utils */
 int _writestr(int fd, char *str);

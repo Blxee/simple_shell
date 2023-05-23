@@ -75,3 +75,62 @@ char *_setenv(char *var, char *value, char **envp)
 	*(envp + 1) = NULL;
 	return (*envp);
 }
+
+#ifdef ALIASES_SIZE
+#undef ALIASES_SIZE
+#endif /* !ALIASES_SIZE */
+#define ALIASES_SIZE 128
+
+char **get_aliases(void)
+{
+	static char **s_aliases;
+
+	if (s_aliases == NULL)
+		alloc_mem(ALIASES_SIZE * 2 * sizeof(char));
+	return (s_aliases);
+}
+
+/**
+ */
+int check_alias(char **args)
+{
+	char **aliases = get_aliases();
+	unsigned int i;
+
+	if (_strcmp(args[0], "alias") == 0)
+	{
+		if (args[1] == NULL)
+		{
+			for (i = 0; aliases[i]; i++)
+			{
+				_writestr(STDOUT_FILENO, aliases[i + 0]);
+				_writestr(STDOUT_FILENO, "=");
+				_writestr(STDOUT_FILENO, aliases[i + 1]);
+				_writestr(STDOUT_FILENO, "\n");
+			}
+			return (1);
+		}
+		return (1);
+	}
+	return (0);
+}
+
+/**
+ */
+void replace_aliased(char **cmd)
+{
+	char **aliases = get_aliases();
+
+	while (*aliases)
+	{
+		char *alias = aliases[0], *value = aliases[1];
+
+		if (_strcmp(*cmd, alias) == 0)
+		{
+			if (_strlen(value) > _strlen(*cmd))
+				*cmd = alloc_mem(_strlen(value) + 1);
+			_strcpy(*cmd, value);
+		}
+		aliases += 2;
+	}
+}

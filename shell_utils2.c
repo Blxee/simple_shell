@@ -34,6 +34,8 @@ int check_custom_commands(char **args, char **envp)
 		return (1);
 	if (check_cd(args, envp))
 		return (1);
+	if (check_alias(args))
+		return (1);
 	return (0);
 }
 
