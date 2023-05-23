@@ -1,8 +1,9 @@
 #ifndef MAIN_H
 #define MAIN_H
 #include <stdlib.h>
-#include <unistd.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 #ifdef MEM_ARRAY_SIZE
 #undef MEM_ARRAY_SIZE
