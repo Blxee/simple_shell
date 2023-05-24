@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <signal.h>
 
 void handle_sig(int sig)
 {
