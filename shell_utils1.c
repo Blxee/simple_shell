@@ -161,19 +161,24 @@ int handle_exit(char **args)
 
 	if (_strcmp(args[0], "exit") == 0)
 	{
-		status = args[1] ? args[1] : "0";
-		for (i = 0; i < _strlen(status); i++)
+		status = args[1];
+		if (status)
 		{
-			if (!_isdigit(status[i]))
+			for (i = 0; i < _strlen(status); i++)
 			{
-				err_msg = "Invalide exit status: ";
-				write(STDERR_FILENO, err_msg, _strlen(err_msg));
-				write(STDOUT_FILENO, status, _strlen(status));
-				write(STDOUT_FILENO, "\n", 1);
-				return (1);
+				if (!_isdigit(status[i]))
+				{
+					err_msg = "Invalid exit status: ";
+					write(STDERR_FILENO, err_msg, _strlen(err_msg));
+					write(STDOUT_FILENO, status, _strlen(status));
+					write(STDOUT_FILENO, "\n", 1);
+					return (1);
+				}
 			}
+			exit_status = _atoi(status);
 		}
-		exit_status = _atoi(status);
+		else
+			exit_status = *get_last_cmd_exit();
 		free_all();
 		exit(exit_status);
 		return (1);

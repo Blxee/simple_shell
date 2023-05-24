@@ -4,6 +4,11 @@
 #include <stdio.h>
 #include <signal.h>
 
+/**
+ * handle_sig - handler function to pass to signal()
+ *
+ * @sig: the signal integer
+ */
 void handle_sig(int sig)
 {
 	(void)sig;
