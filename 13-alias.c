@@ -91,7 +91,7 @@ Alias *create_alias(char *name, char *value)
 /**
  * print_aliases - prints aliases
  */
-void print_aliases()
+void print_aliases(void)
 {
 	int i;
 	Alias *aliases[MAX_ALIASES] = {NULL};

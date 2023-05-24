@@ -30,7 +30,7 @@ typedef struct {
 int check_alias(char **args);
 void set_alias(char **args);
 Alias *create_alias(char *name, char *value);
-void print_aliases();
+void print_aliases(void);
 
 /* shell utils */
 int handle_exit(char **args);
