@@ -20,7 +20,7 @@ int check_alias(char *args[])
 	return (0);
 }
 /**
- * set_alias
+ * set_alias - sets a new alias
  * @args: the command and its arguments
  */
 void set_alias(char **args)
