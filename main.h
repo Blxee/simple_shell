@@ -27,9 +27,9 @@ typedef struct {
 	char *value;
 } Alias;
 /* handle  aliases */
-int check_alias(char *args[]);
+int check_alias(char **args);
 void set_alias(char **args);
-Alias *create_alias(const char *name, const char *value);
+Alias *create_alias(char *name, char *value);
 void print_aliases();
 
 /* shell utils */
@@ -63,6 +63,7 @@ int _writestr(int fd, char *str);
 ssize_t _getline(char **lineptr, size_t *n, int fd);
 
 /* string utils */
+char *_strdup(char *str);
 int _atoi(char *s);
 int _strncmp(char *str1, char *str2, unsigned int n);
 char *_strcat(char *dest, const char *src);

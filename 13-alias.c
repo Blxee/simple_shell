@@ -60,7 +60,7 @@ void set_alias(char **args)
 					if (aliases[j] && _strcmp(aliases[j]->name, name) == 0)
 					{
 						free_mem(aliases[j]->value);
-						aliases[j]->value = strdup(value);
+						aliases[j]->value = _strdup(value);
 						added = 1;
 						break;
 					}
@@ -81,11 +81,11 @@ void set_alias(char **args)
  * @value: value
  * Return: an alias
  */
-Alias *create_alias(const char *name, const char *value)
+Alias *create_alias(char *name, char *value)
 {
 	Alias *alias = malloc(sizeof(Alias));
-	alias->name = strdup(name);
-	alias->value = strdup(value);
+	alias->name = _strdup(name);
+	alias->value = _strdup(value);
 	return (alias);
 }
 /**
