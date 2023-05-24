@@ -1,10 +1,21 @@
 #include "main.h"
 #include <string.h>
-Alias *aliases[MAX_ALIASES] = {NULL};
+
+/**
+ * get_aliases - return the aliases global variable
+ *
+ * Return: aliases
+ */
+Alias **get_aliases(void)
+{
+	static Alias *aliases[MAX_ALIASES] = {NULL};
+
+	return (aliases);
+}
+
 /**
  * check_alias - checks if the command is 'alias'
- * @args: the command and its arguments 
- * @envp: the environment variables vector
+ * @args: the command and its arguments
  *
  * Return: an integer
  */
@@ -25,9 +36,9 @@ int check_alias(char *args[])
  */
 void set_alias(char **args)
 {
-	int i, j, added;
+	int i, j, added, fd = STDOUT_FILENO;
 	char *name, *value;
-	Alias *alias = NULL;
+	Alias *alias = NULL, **aliases = get_aliases();
 
 	if (!args[0])
 		print_aliases();
@@ -35,22 +46,17 @@ void set_alias(char **args)
 	{
 		for (i = 0; args[i] != NULL; i++)
 		{
-			name = _strtok(args[i], "=");
-			value = _strtok(NULL, "=");
+			name = _strtok(args[i], "="), value = _strtok(NULL, "=");
 			if (!value)
-			{
 				for (j = 0; j < MAX_ALIASES; j++)
 				{
 					if (aliases[j] && _strcmp(aliases[j]->name, name) == 0)
 					{
-						_writestr(STDOUT_FILENO, aliases[j]->name);
-						_writestr(STDOUT_FILENO, "=");
-						_writestr(STDOUT_FILENO, aliases[j]->value);
-						_writestr(STDOUT_FILENO, "\n");
+						_writestr(fd, aliases[j]->name), _writestr(fd, "="),
+						_writestr(fd, aliases[j]->value), _writestr(fd, "\n");
 						break;
 					}
 				}
-			}
 			else
 			{
 				alias = create_alias(name, value);
@@ -66,11 +72,7 @@ void set_alias(char **args)
 					}
 				}
 				if (!added)
-				{
-					free_mem(alias->name);
-					free_mem(alias->value);
-					free_mem(alias);
-				}
+					free_mem(alias->name), free_mem(alias->value), free_mem(alias);
 			}
 		}
 	}
@@ -84,6 +86,7 @@ void set_alias(char **args)
 Alias *create_alias(char *name, char *value)
 {
 	Alias *alias = malloc(sizeof(Alias));
+
 	alias->name = _strdup(name);
 	alias->value = _strdup(value);
 	return (alias);
@@ -94,7 +97,7 @@ Alias *create_alias(char *name, char *value)
 void print_aliases(void)
 {
 	int i;
-	Alias *aliases[MAX_ALIASES] = {NULL};
+	Alias **aliases = get_aliases();
 
 	for (i = 0; i < MAX_ALIASES; i++)
 	{

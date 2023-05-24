@@ -78,7 +78,7 @@ void parse_cmd(char *args[], char *line, char **envp, int stdin_fd)
 {
 	int i = 0, cmmt_idx;
 	char *token, *quoted_strings[128], **quote = quoted_strings;
-	
+
 	cmmt_idx = find_chars(line, "#");
 	if (cmmt_idx != -1)
 		line[cmmt_idx] = '\0';

@@ -22,10 +22,18 @@
 #define MAX_INPUT_LENGTH 100
 #define MAX_ALIASES 10
 
-typedef struct {
+/**
+ * struct alias - data structor for alias command
+ *
+ * @name: name of the alias
+ * @value: value of the alias
+ */
+typedef struct alias
+{
 	char *name;
 	char *value;
 } Alias;
+
 /* handle  aliases */
 int check_alias(char **args);
 void set_alias(char **args);
