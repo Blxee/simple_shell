@@ -41,7 +41,7 @@ int main(int argc, char *argv[], char *envp[])
 		if (check_custom_commands(args, envp))
 			continue;
 		fork_process(is_interactive, args, envp);
-		free(line);
+		free_mem(line);
 	}
 	free_all();
 	return (0);
