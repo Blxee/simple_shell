@@ -24,17 +24,24 @@ void *alloc_mem(unsigned long size)
 {
 	void **mem_array = get_mem_array();
 	void *ptr = malloc(size);
+	unsigned int i = 0;
 
 	if (ptr == NULL)
 	{
 		perror(*get_program_name());
+		free_all();
 		exit(127);
 	}
 
-	while (*mem_array != NULL)
-		mem_array++;
-
-	*mem_array = ptr;
+	while (i < MEM_ARRAY_SIZE)
+	{
+		if (mem_array[i] == NULL)
+		{
+			mem_array[i] = ptr;
+			break;
+		}
+		i++;
+	}
 
 	return (ptr);
 }

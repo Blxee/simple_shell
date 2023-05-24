@@ -45,6 +45,7 @@ int handle_path(char **cmd, char *envp[])
 			dir = _strtok(NULL, ":");
 		}
 	}
+	_strcpy(*cmd, cmd_cpy);
 	return (0);
 }
 
@@ -68,12 +69,12 @@ void child_process(char *cmd, char *args[])
 /**
  * parse_cmd - splits command and its arguments
  *
- * @cmd: an array to store the command
  * @args: an array to store the arguments (starting with @cmd)
  * @line: the raw input line fromthe user
  * @envp: the environment variables vector
+ * @stdin_fd: the input file director
  */
-void parse_cmd(char cmd[], char *args[], char *line, char **envp)
+void parse_cmd(char *args[], char *line, char **envp, int stdin_fd)
 {
 	int i = 0, comment_idx;
 	char *token, *quoted_strings[128], **quote = quoted_strings;
@@ -82,12 +83,11 @@ void parse_cmd(char cmd[], char *args[], char *line, char **envp)
 	if (comment_idx != -1)
 		line[comment_idx] = '\0';
 	replace_variables(&line, envp);
-	get_quoted_strings(&line, quoted_strings);
+	get_quoted_strings(&line, quoted_strings, stdin_fd);
 	token = _strtok(line, " \t\n");
 	if (token)
 	{
 		expand_quote(&token, &quote);
-		_strcpy(cmd, token); /* set cmd to be the first token */
 		args[i++] = token;
 	}
 	while ((token = _strtok(NULL, " \t\n")))
@@ -95,7 +95,6 @@ void parse_cmd(char cmd[], char *args[], char *line, char **envp)
 		expand_quote(&token, &quote);
 		args[i++] = token;
 	}
-	args[0] = cmd; /* set the first arg to the program name */
 	args[i] = NULL; /*set the last element to NULL*/
 }
 
@@ -108,9 +107,12 @@ void parse_cmd(char cmd[], char *args[], char *line, char **envp)
  */
 void fork_process(int is_interactive, char **args, char *envp[])
 {
+	static unsigned int prompt_number;
 	int fork_ret, child_ret = 0;
 	char **next_cmd = args, sep = ';';
 
+	(void)is_interactive;
+	prompt_number++;
 	while (sep && (sep == ';' || (sep == '&' && child_ret == 0)
 				|| (sep == '|' && child_ret != 0)))
 	{ /* for each (; || &&) separated command */
@@ -118,8 +120,13 @@ void fork_process(int is_interactive, char **args, char *envp[])
 		next_separator(&next_cmd, &sep);
 		if (!handle_path(&args[0], envp))
 		{
-			perror(*get_program_name());
-			child_ret = 1;
+			_writestr(STDERR_FILENO, *get_program_name());
+			_writestr(STDERR_FILENO, ": ");
+			_writestr(STDERR_FILENO, int_to_str(prompt_number));
+			_writestr(STDERR_FILENO, ": ");
+			_writestr(STDERR_FILENO, args[0]);
+			_writestr(STDERR_FILENO, ": not found\n");
+			*get_last_cmd_exit() = child_ret = 127;
 			continue;
 		}
 		fork_ret = fork();
@@ -134,11 +141,9 @@ void fork_process(int is_interactive, char **args, char *envp[])
 		else
 		{ /* main process */
 			wait(&child_ret); /* wait for the child process */
-			*get_last_cmd_status() = child_ret;
 			child_ret = WEXITSTATUS(child_ret);
+			*get_last_cmd_exit() = child_ret;
 			free_mem(args[0]);
-			if (!is_interactive && child_ret != 0)
-				exit(child_ret);
 		}
 	}
 }
@@ -169,6 +174,7 @@ int handle_exit(char **args)
 			}
 		}
 		exit_status = _atoi(status);
+		free_all();
 		exit(exit_status);
 		return (1);
 	}

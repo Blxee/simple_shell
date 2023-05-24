@@ -42,8 +42,9 @@ int check_custom_commands(char **args, char **envp)
  *
  * @line: the address of the line to search
  * @quoted_strings: an array to store pointer to quoted strings
+ * @stdin_fd: the input file director
  */
-void get_quoted_strings(char **line, char **quoted_strings)
+void get_quoted_strings(char **line, char **quoted_strings, int stdin_fd)
 {
 	char quote[2], *new_line;
 	int quote_start, quote_end, search_mark = 0,
@@ -62,10 +63,11 @@ void get_quoted_strings(char **line, char **quoted_strings)
 
 			if (is_interactive)
 				_writestr(STDOUT_FILENO, "> ");
-			new_line_len = _getline(&new_line, &new_line_mem, STDIN_FILENO);
+			new_line_len = _getline(&new_line, &new_line_mem, stdin_fd);
 			if (new_line_len == -1)
 			{
 				perror(*get_program_name());
+				free_all();
 				exit(127);
 			}
 			*line = alloc_mem(_strlen(old_line) + new_line_len);
@@ -74,7 +76,6 @@ void get_quoted_strings(char **line, char **quoted_strings)
 			_strcat(*line, new_line);
 		}
 		quote_end += quote_start + 1;
-		/* quote has been terminated! */
 		/* append quoted str to quoted_strings */
 		*quoted_strings = alloc_mem(quote_end - quote_start);
 		(*line + search_mark)[quote_end] = '\0';
