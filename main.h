@@ -19,6 +19,18 @@
 #undef INIT_READ_SIZE
 #endif /* !INIT_READ_SIZE */
 #define INIT_READ_SIZE 128
+#define MAX_INPUT_LENGTH 100
+#define MAX_ALIASES 10
+
+typedef struct {
+	char *name;
+	char *value;
+} Alias;
+/* handle  aliases */
+int check_alias(char *args[]);
+void set_alias(char **args);
+Alias *create_alias(const char *name, const char *value);
+void print_aliases();
 
 /* shell utils */
 int handle_exit(char **args);

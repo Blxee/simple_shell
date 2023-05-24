@@ -76,12 +76,12 @@ void child_process(char *cmd, char *args[])
  */
 void parse_cmd(char *args[], char *line, char **envp, int stdin_fd)
 {
-	int i = 0, comment_idx;
+	int i = 0, cmmt_idx;
 	char *token, *quoted_strings[128], **quote = quoted_strings;
 	
-	comment_idx = find_chars(line, "#");
-	if (comment_idx != -1)
-		line[comment_idx] = '\0';
+	cmmt_idx = find_chars(line, "#");
+	if (cmmt_idx != -1)
+		line[cmmt_idx] = '\0';
 	replace_variables(&line, envp);
 	get_quoted_strings(&line, quoted_strings, stdin_fd);
 	token = _strtok(line, " \t\n");
