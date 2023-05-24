@@ -1,5 +1,6 @@
 #include "main.h"
 #include <string.h>
+Alias *aliases[MAX_ALIASES] = {NULL};
 /**
  * check_alias - checks if the command is 'alias'
  * @args: the command and its arguments 
@@ -26,13 +27,13 @@ void set_alias(char **args)
 {
 	int i, j, added;
 	char *name, *value;
-	Alias *aliases[MAX_ALIASES] = {NULL}, *alias = NULL;
+	Alias *alias = NULL;
 
-	if (!args[1])/* no given arguments, print aliases */
+	if (!args[0])
 		print_aliases();
 	else
 	{
-		for (i = 1; args[i] != NULL; i++)
+		for (i = 0; args[i] != NULL; i++)
 		{
 			name = _strtok(args[i], "=");
 			value = _strtok(NULL, "=");
@@ -99,10 +100,7 @@ void print_aliases()
 	{
 		if (aliases[i])
 		{
-			_writestr(STDOUT_FILENO, aliases[i]->name);
-			_writestr(STDOUT_FILENO, "=");
-			_writestr(STDOUT_FILENO, aliases[i]->value);
-			_writestr(STDOUT_FILENO, "\n");	
+			printf("%s='%s'\n", aliases[i]->name, aliases[i]->value);
 		}
 	}
 }
