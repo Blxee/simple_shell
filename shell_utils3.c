@@ -133,7 +133,7 @@ int open_file(int argc, char **argv)
 		{
 			perror(*get_program_name());
 			free_all();
-			exit(2);
+			exit(127);
 		}
 		return (fd);
 	}

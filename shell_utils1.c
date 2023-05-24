@@ -170,8 +170,8 @@ int handle_exit(char **args)
 				{
 					err_msg = "Invalid exit status: ";
 					write(STDERR_FILENO, err_msg, _strlen(err_msg));
-					write(STDOUT_FILENO, status, _strlen(status));
-					write(STDOUT_FILENO, "\n", 1);
+					write(STDERR_FILENO, status, _strlen(status));
+					write(STDERR_FILENO, "\n", 1);
 					return (1);
 				}
 			}
