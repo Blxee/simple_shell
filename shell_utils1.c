@@ -140,8 +140,6 @@ void fork_process(int is_interactive, char **args, char *envp[])
 			child_ret = WEXITSTATUS(child_ret);
 			*get_last_cmd_exit() = child_ret;
 			free_mem(args[0]);
-			if (!is_interactive && child_ret != 0)
-				exit(child_ret);
 		}
 	}
 }
@@ -172,6 +170,7 @@ int handle_exit(char **args)
 			}
 		}
 		exit_status = _atoi(status);
+		free_all();
 		exit(exit_status);
 		return (1);
 	}

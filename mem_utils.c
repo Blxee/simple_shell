@@ -29,6 +29,7 @@ void *alloc_mem(unsigned long size)
 	if (ptr == NULL)
 	{
 		perror(*get_program_name());
+		free_all();
 		exit(127);
 	}
 

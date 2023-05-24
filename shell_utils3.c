@@ -132,6 +132,7 @@ int open_file(int argc, char **argv)
 		if (fd == -1)
 		{
 			perror(*get_program_name());
+			free_all();
 			exit(2);
 		}
 		return (fd);

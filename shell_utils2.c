@@ -67,6 +67,7 @@ void get_quoted_strings(char **line, char **quoted_strings, int stdin_fd)
 			if (new_line_len == -1)
 			{
 				perror(*get_program_name());
+				free_all();
 				exit(127);
 			}
 			*line = alloc_mem(_strlen(old_line) + new_line_len);
@@ -75,7 +76,6 @@ void get_quoted_strings(char **line, char **quoted_strings, int stdin_fd)
 			_strcat(*line, new_line);
 		}
 		quote_end += quote_start + 1;
-		/* quote has been terminated! */
 		/* append quoted str to quoted_strings */
 		*quoted_strings = alloc_mem(quote_end - quote_start);
 		(*line + search_mark)[quote_end] = '\0';
