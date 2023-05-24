@@ -108,6 +108,7 @@ void fork_process(int is_interactive, char **args, char *envp[])
 	int fork_ret, child_ret = 0;
 	char **next_cmd = args, sep = ';';
 
+	(void)is_interactive;
 	prompt_number++;
 	while (sep && (sep == ';' || (sep == '&' && child_ret == 0)
 				|| (sep == '|' && child_ret != 0)))

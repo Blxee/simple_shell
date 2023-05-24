@@ -3,6 +3,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+void handle_sig(int sig)
+{
+	(void)sig;
+	free_all();
+	exit(*get_last_cmd_exit());
+}
 /**
  * main - simple shell program
  *
@@ -20,6 +26,7 @@ int main(int argc, char *argv[], char *envp[])
 	int is_interactive = isatty(STDOUT_FILENO) && isatty(STDIN_FILENO);
 	int stdin_fd;
 
+	signal(SIGINT, handle_sig);
 	*get_program_name() = argv[0]; /* set the program name static variable */
 	stdin_fd = open_file(argc, argv);
 	if (stdin_fd != -1)
