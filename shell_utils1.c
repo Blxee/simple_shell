@@ -154,9 +154,8 @@ void fork_process(int is_interactive, char **args, char *envp[])
  */
 int handle_exit(char **args)
 {
-	char *status, *err_msg;
+	char *status;
 	int exit_status;
-	size_t i;
 
 	if (_strcmp(args[0], "exit") == 0)
 	{
