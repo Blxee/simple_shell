@@ -15,6 +15,7 @@ void handle_sig(int sig)
 	free_all();
 	exit(*get_last_cmd_exit());
 }
+
 /**
  * main - simple shell program
  *
@@ -57,7 +58,7 @@ int main(int argc, char *argv[], char *envp[])
 		if (handle_exit(args))
 			break;
 		fork_process(is_interactive, args, envp);
-		free_mem(line);
+		/* free_mem(line); */
 	}
 	free_all();
 	return (*get_last_cmd_exit());

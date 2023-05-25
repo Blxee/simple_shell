@@ -142,7 +142,7 @@ void fork_process(int is_interactive, char **args, char *envp[])
 			wait(&child_ret); /* wait for the child process */
 			child_ret = WEXITSTATUS(child_ret);
 			*get_last_cmd_exit() = child_ret;
-			free_mem(args[0]);
+			/* free_mem(args[0]); */
 		}
 	}
 }

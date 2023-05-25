@@ -49,7 +49,7 @@ ssize_t _getline(char **line_p, size_t *len_p, int fd)
 			s_bufidx = 0;
 		}
 		chr = s_buffer[s_bufidx++];
-		if (strlen == (ssize_t)*len_p)
+		if (strlen + 1 >= (ssize_t)*len_p)
 		{
 			*len_p *= 2;
 			new_p = alloc_mem(*len_p * sizeof(char));
