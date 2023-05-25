@@ -69,7 +69,8 @@ void child_process(char *cmd, char *args[])
 		"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
 		"OLDPWD=/",
 		"_=/usr/bin/env", NULL};
-	if (execve(cmd, args, envp) == -1)
+	(void)envp;
+	if (execve(cmd, args, environ) == -1)
 	{ /* exec failed (cmd not found) */
 		free_all();
 		perror(*get_program_name());
