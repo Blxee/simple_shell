@@ -60,18 +60,14 @@ char *_setenv(char *var, char *value, char **envp)
 					*envp = alloc_mem(valuelen * sizeof(char));
 				}
 				var[i] = '\0';
-				_strcpy(*envp, var);
-				_strcat(*envp, "=");
-				_strcat(*envp, value);
+				_strcpy(*envp, var), _strcat(*envp, "="), _strcat(*envp, value);
 				return (*envp);
 			}
 			envp++;
 		}
 	var[i] = '\0';
-	*envp = alloc_mem(valuelen * sizeof(char));
-	_strcpy(*envp, var);
-	_strcat(*envp, "=");
-	_strcat(*envp, value);
+	*envp = alloc_mem(valuelen + 1);
+	_strcpy(*envp, var), _strcat(*envp, "="), _strcat(*envp, value);
 	*(envp + 1) = NULL;
 	return (*envp);
 }
