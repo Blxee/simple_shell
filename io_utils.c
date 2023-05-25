@@ -55,7 +55,7 @@ ssize_t _getline(char **line_p, size_t *len_p, int fd)
 			new_p = alloc_mem(*len_p * sizeof(char));
 			if (new_p == NULL)
 				return (-1);
-			_strcpy(new_p, *line_p);
+			_strncpy(new_p, *line_p, strlen);
 			free_mem(*line_p);
 			*line_p = new_p;
 		}

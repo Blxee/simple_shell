@@ -84,6 +84,7 @@ unsigned int _strlen(char *str);
 int find_chars(char *str, char *chars);
 int _isdigit(int c);
 char *int_to_str(long n);
+char *_strncpy(char *dest, const char *src, unsigned int n);
 
 /* memory utils */
 void *alloc_mem(unsigned long size);
