@@ -57,7 +57,9 @@ int handle_path(char **cmd)
  */
 void child_process(char *cmd, char *args[])
 {
-	if (execve(cmd, args, environ) == -1)
+	char *envp[] = { "LC_ALL=en_US.UTF-8", NULL };
+
+	if (execve(cmd, args, envp) == -1)
 	{ /* exec failed (cmd not found) */
 		free_all();
 		perror(*get_program_name());
