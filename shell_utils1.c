@@ -57,7 +57,7 @@ int handle_path(char **cmd)
  */
 void child_process(char *cmd, char *args[])
 {
-	if (execve(cmd, args, NULL) == -1)
+	if (execve(cmd, args, environ) == -1)
 	{ /* exec failed (cmd not found) */
 		free_all();
 		perror(*get_program_name());
