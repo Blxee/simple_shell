@@ -81,16 +81,18 @@ void parse_cmd(char *args[], char *line, int stdin_fd)
 	if (cmmt_idx != -1)
 		line[cmmt_idx] = '\0';
 	replace_variables(&line);
-	get_quoted_strings(&line, quoted_strings, stdin_fd);
+	/* get_quoted_strings(&line, quoted_strings, stdin_fd); */
+	(void)stdin_fd;
+	(void)quote;
 	token = _strtok(line, " \t\n\r");
 	if (token)
 	{
-		expand_quote(&token, &quote);
+		/* expand_quote(&token, &quote); */
 		args[i++] = token;
 	}
 	while ((token = _strtok(NULL, " \t\n\r")))
 	{
-		expand_quote(&token, &quote);
+		/* expand_quote(&token, &quote); */
 		args[i++] = token;
 	}
 	args[i] = NULL; /*set the last element to NULL*/
