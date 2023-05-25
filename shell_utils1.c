@@ -84,13 +84,13 @@ void parse_cmd(char *args[], char *line, char **envp, int stdin_fd)
 		line[cmmt_idx] = '\0';
 	replace_variables(&line, envp);
 	get_quoted_strings(&line, quoted_strings, stdin_fd);
-	token = _strtok(line, " \t\n");
+	token = _strtok(line, " \t\n\r");
 	if (token)
 	{
 		expand_quote(&token, &quote);
 		args[i++] = token;
 	}
-	while ((token = _strtok(NULL, " \t\n")))
+	while ((token = _strtok(NULL, " \t\n\r")))
 	{
 		expand_quote(&token, &quote);
 		args[i++] = token;
