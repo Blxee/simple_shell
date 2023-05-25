@@ -57,8 +57,18 @@ int handle_path(char **cmd)
  */
 void child_process(char *cmd, char *args[])
 {
-	char *envp[] = { "LC_ALL=en_US.UTF-8", NULL };
-
+	char *envp[] = {
+		"HOSTNAME=13bec1780ea6",
+		"LANGUAGE=en_US:en",
+		"PWD=/tmp/correction/1616807236760415158271163545519943040961_5/235/380698",
+		"TZ=America/Los_Angeles",
+		"HOME=/root",
+		"LANG=en_US.UTF-8",
+		"SHLVL=2",
+		"LC_ALL=en_US.UTF-8",
+		"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+		"OLDPWD=/",
+		"_=/usr/bin/env", NULL};
 	if (execve(cmd, args, envp) == -1)
 	{ /* exec failed (cmd not found) */
 		free_all();
