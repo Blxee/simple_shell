@@ -158,21 +158,11 @@ int handle_exit(char **args)
 	int exit_status;
 	size_t i;
 
-	if (args[0] && _strcmp(args[0], "exit") == 0)
+	if (_strcmp(args[0], "exit") == 0)
 	{
 		status = args[1];
 		if (status)
-		{
-			for (i = 0; i < _strlen(status); i++)
-			{
-				err_msg = "Invalid exit status: ";
-				write(STDERR_FILENO, err_msg, _strlen(err_msg));
-				write(STDERR_FILENO, status, _strlen(status));
-				write(STDERR_FILENO, "\n", 1);
-				return (1);
-			}
 			exit_status = _atoi(status);
-		}
 		else
 			exit_status = *get_last_cmd_exit();
 		free_all();
