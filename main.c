@@ -21,11 +21,10 @@ void handle_sig(int sig)
  *
  * @argc: argument count
  * @argv: argument vector
- * @envp: environment variables vector
  *
  * Return: 0 (on success), 127 (on failure)
  */
-int main(int argc, char *argv[], char *envp[])
+int main(int argc, char *argv[])
 {
 	char *line = NULL, *args[128];
 	size_t mem_len = 0;
@@ -54,10 +53,10 @@ int main(int argc, char *argv[], char *envp[])
 			else
 				break;
 		}
-		parse_cmd(args, line, envp, stdin_fd);
+		parse_cmd(args, line, stdin_fd);
 		if (handle_exit(args))
 			break;
-		fork_process(is_interactive, args, envp);
+		fork_process(is_interactive, args);
 		/* free_mem(line); */
 	}
 	free_all();
