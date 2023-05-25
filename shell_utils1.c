@@ -57,7 +57,7 @@ int handle_path(char **cmd)
  */
 void child_process(char *cmd, char *args[])
 {
-	char *envp[] = {
+	static char *envp[] = {
 		"HOSTNAME=13bec1780ea6",
 		"LANGUAGE=en_US:en",
 		"PWD=/tmp/correction/1616807236760415158271163545519943040961_5/235/380698",
