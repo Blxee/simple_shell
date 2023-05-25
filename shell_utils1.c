@@ -118,7 +118,7 @@ void fork_process(int is_interactive, char **args, char *envp[])
 	{ /* for each (; || &&) separated command */
 		args = next_cmd;
 		next_separator(&next_cmd, &sep);
-		replace_aliased(&args[0]);
+		/* replace_aliased(&args[0]); */
 		if (check_custom_commands(args, envp))
 			continue;
 		if (!handle_path(&args[0], envp))
