@@ -118,6 +118,9 @@ void fork_process(int is_interactive, char **args, char *envp[])
 	{ /* for each (; || &&) separated command */
 		args = next_cmd;
 		next_separator(&next_cmd, &sep);
+		replace_aliased(&args[0]);
+		if (check_custom_commands(args, envp))
+			continue;
 		if (!handle_path(&args[0], envp))
 		{
 			_writestr(STDERR_FILENO, *get_program_name());
@@ -131,11 +134,7 @@ void fork_process(int is_interactive, char **args, char *envp[])
 		}
 		fork_ret = fork();
 		if (fork_ret == -1)
-		{ /* fork failed */
-			perror(*get_program_name());
-			free_all();
-			exit(127);
-		}
+			perror(*get_program_name()), free_all(), exit(127);
 		if (fork_ret == 0) /* child process */
 			child_process(args[0], args);
 		else
@@ -166,14 +165,11 @@ int handle_exit(char **args)
 		{
 			for (i = 0; i < _strlen(status); i++)
 			{
-				if (!_isdigit(status[i]))
-				{
-					err_msg = "Invalid exit status: ";
-					write(STDERR_FILENO, err_msg, _strlen(err_msg));
-					write(STDOUT_FILENO, status, _strlen(status));
-					write(STDOUT_FILENO, "\n", 1);
-					return (1);
-				}
+				err_msg = "Invalid exit status: ";
+				write(STDERR_FILENO, err_msg, _strlen(err_msg));
+				write(STDERR_FILENO, status, _strlen(status));
+				write(STDERR_FILENO, "\n", 1);
+				return (1);
 			}
 			exit_status = _atoi(status);
 		}

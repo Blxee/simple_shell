@@ -56,8 +56,6 @@ int main(int argc, char *argv[], char *envp[])
 		parse_cmd(args, line, envp, stdin_fd);
 		if (handle_exit(args))
 			break;
-		if (check_custom_commands(args, envp))
-			continue;
 		fork_process(is_interactive, args, envp);
 		free_mem(line);
 	}
