@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+extern char **environ;
+
 #ifdef MEM_ARRAY_SIZE
 #undef MEM_ARRAY_SIZE
 #endif /* !MEM_ARRAY_SIZE */
@@ -22,41 +24,48 @@
 #define MAX_INPUT_LENGTH 100
 #define MAX_ALIASES 10
 
-typedef struct {
+/**
+ * struct alias - data structor for alias command
+ *
+ * @name: name of the alias
+ * @value: value of the alias
+ */
+typedef struct alias
+{
 	char *name;
 	char *value;
 } Alias;
+
 /* handle  aliases */
 int check_alias(char **args);
 void set_alias(char **args);
 Alias *create_alias(char *name, char *value);
-void print_aliases();
+void print_aliases(void);
 
 /* shell utils */
 int handle_exit(char **args);
-int handle_path(char **cmd, char *envp[]);
+int handle_path(char **cmd);
 void child_process(char *cmd, char *args[]);
-void parse_cmd(char *args[], char *line,
-		char **envp, int stdin_fd);
-void fork_process(int is_interactive,
-		char **args,
-		char *envp[]);
-int check_custom_commands(char **args, char **envp);
+void parse_cmd(char *args[], char *line, int stdin_fd);
+void fork_process(int is_interactive, char **args);
+int check_custom_commands(char **args);
 void get_quoted_strings(char **line, char **quoted_strings, int stdin_fd);
 char **get_program_name(void);
 void next_separator(char ***next_cmd, char *sep);
 void expand_quote(char **str, char ***quotes);
-void replace_variables(char **line, char **envp);
+void replace_variables(char **line);
 int *get_last_cmd_exit(void);
 int open_file(int argc, char **argv);
 
 /* custom_commands */
-char *_getenv(char *var, char **envp);
-char *_setenv(char *var, char *value, char **envp);
-int check_env(char *cmd, char **envp);
-int check_setenv(char **args, char **envp);
-int check_unsetenv(char **args, char **envp);
-int check_cd(char **args, char **envp);
+char *_getenv(char *var);
+char *_setenv(char *var, char *value);
+int check_env(char *cmd);
+int check_setenv(char **args);
+int check_unsetenv(char **args);
+int check_cd(char **args);
+int check_alias(char **args);
+void replace_aliased(char **cmd);
 
 /* io utils */
 int _writestr(int fd, char *str);
@@ -74,6 +83,7 @@ unsigned int _strlen(char *str);
 int find_chars(char *str, char *chars);
 int _isdigit(int c);
 char *int_to_str(long n);
+char *_strncpy(char *dest, const char *src, unsigned int n);
 
 /* memory utils */
 void *alloc_mem(unsigned long size);

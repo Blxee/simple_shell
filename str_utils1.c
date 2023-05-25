@@ -102,7 +102,7 @@ char *_strcpy(char *dest, const char *src)
 char *_strtok(char *str, char *delim)
 {
 	static char *pre;
-	char *d_chr, *s_chr, *token;
+	char *d_chr, *s_chr, *token = NULL;
 
 	if (str)
 		pre = str;

@@ -8,27 +8,26 @@
  *	in which the command was found
  *
  * @cmd: the command string to prepend path to (without args)
- * @envp: the environment variables vector
  *
  * Return:
  *	1 if the command was found
  *	0 elsewise
  */
-int handle_path(char **cmd, char *envp[])
+int handle_path(char **cmd)
 {
 	char *path = NULL, *dir, cmd_cpy[128];
 
 	_strcpy(cmd_cpy, *cmd); /* preserve the original command */
 	if (access(cmd_cpy, F_OK) == 0) /* if cmd is a full path */
 		return (1);
-	while (*envp)
+	while (*environ)
 	{	/* look for PATH variable */
-		if (_strncmp("PATH=", *envp, 5) == 0)
+		if (_strncmp("PATH=", *environ, 5) == 0)
 		{ /* PATH found */
-			path = *envp + 5; /* +5 to jump the "PATH=" section */
+			path = *environ + 5; /* +5 to jump the "PATH=" section */
 			break;
 		}
-		envp++;
+		environ++;
 	}
 	if (path && path[0] != '\0')
 	{
@@ -71,26 +70,25 @@ void child_process(char *cmd, char *args[])
  *
  * @args: an array to store the arguments (starting with @cmd)
  * @line: the raw input line fromthe user
- * @envp: the environment variables vector
  * @stdin_fd: the input file director
  */
-void parse_cmd(char *args[], char *line, char **envp, int stdin_fd)
+void parse_cmd(char *args[], char *line, int stdin_fd)
 {
 	int i = 0, cmmt_idx;
 	char *token, *quoted_strings[128], **quote = quoted_strings;
-	
+
 	cmmt_idx = find_chars(line, "#");
 	if (cmmt_idx != -1)
 		line[cmmt_idx] = '\0';
-	replace_variables(&line, envp);
+	replace_variables(&line);
 	get_quoted_strings(&line, quoted_strings, stdin_fd);
-	token = _strtok(line, " \t\n");
+	token = _strtok(line, " \t\n\r");
 	if (token)
 	{
 		expand_quote(&token, &quote);
 		args[i++] = token;
 	}
-	while ((token = _strtok(NULL, " \t\n")))
+	while ((token = _strtok(NULL, " \t\n\r")))
 	{
 		expand_quote(&token, &quote);
 		args[i++] = token;
@@ -103,9 +101,8 @@ void parse_cmd(char *args[], char *line, char **envp, int stdin_fd)
  *
  * @is_interactive: boolean represents whether this is interactive session
  * @args: arguments to pass to execve syscall
- * @envp: the environment variables vector
  */
-void fork_process(int is_interactive, char **args, char *envp[])
+void fork_process(int is_interactive, char **args)
 {
 	static unsigned int prompt_number;
 	int fork_ret, child_ret = 0;
@@ -113,12 +110,15 @@ void fork_process(int is_interactive, char **args, char *envp[])
 
 	(void)is_interactive;
 	prompt_number++;
-	while (sep && (sep == ';' || (sep == '&' && child_ret == 0)
+	while (args[0] && sep && (sep == ';' || (sep == '&' && child_ret == 0)
 				|| (sep == '|' && child_ret != 0)))
 	{ /* for each (; || &&) separated command */
 		args = next_cmd;
 		next_separator(&next_cmd, &sep);
-		if (!handle_path(&args[0], envp))
+		/* replace_aliased(&args[0]); */
+		if (check_custom_commands(args))
+			continue;
+		if (!handle_path(&args[0]))
 		{
 			_writestr(STDERR_FILENO, *get_program_name());
 			_writestr(STDERR_FILENO, ": ");
@@ -131,11 +131,7 @@ void fork_process(int is_interactive, char **args, char *envp[])
 		}
 		fork_ret = fork();
 		if (fork_ret == -1)
-		{ /* fork failed */
-			perror(*get_program_name());
-			free_all();
-			exit(127);
-		}
+			perror(*get_program_name()), free_all(), exit(127);
 		if (fork_ret == 0) /* child process */
 			child_process(args[0], args);
 		else
@@ -143,7 +139,7 @@ void fork_process(int is_interactive, char **args, char *envp[])
 			wait(&child_ret); /* wait for the child process */
 			child_ret = WEXITSTATUS(child_ret);
 			*get_last_cmd_exit() = child_ret;
-			free_mem(args[0]);
+			/* free_mem(args[0]); */
 		}
 	}
 }
@@ -155,28 +151,14 @@ void fork_process(int is_interactive, char **args, char *envp[])
  */
 int handle_exit(char **args)
 {
-	char *status, *err_msg;
+	char *status;
 	int exit_status;
-	size_t i;
 
 	if (_strcmp(args[0], "exit") == 0)
 	{
 		status = args[1];
 		if (status)
-		{
-			for (i = 0; i < _strlen(status); i++)
-			{
-				if (!_isdigit(status[i]))
-				{
-					err_msg = "Invalid exit status: ";
-					write(STDERR_FILENO, err_msg, _strlen(err_msg));
-					write(STDOUT_FILENO, status, _strlen(status));
-					write(STDOUT_FILENO, "\n", 1);
-					return (1);
-				}
-			}
 			exit_status = _atoi(status);
-		}
 		else
 			exit_status = *get_last_cmd_exit();
 		free_all();
