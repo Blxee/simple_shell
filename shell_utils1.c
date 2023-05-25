@@ -113,7 +113,7 @@ void fork_process(int is_interactive, char **args, char *envp[])
 
 	(void)is_interactive;
 	prompt_number++;
-	while (sep && (sep == ';' || (sep == '&' && child_ret == 0)
+	while (args[0] && sep && (sep == ';' || (sep == '&' && child_ret == 0)
 				|| (sep == '|' && child_ret != 0)))
 	{ /* for each (; || &&) separated command */
 		args = next_cmd;
@@ -158,7 +158,7 @@ int handle_exit(char **args)
 	int exit_status;
 	size_t i;
 
-	if (_strcmp(args[0], "exit") == 0)
+	if (args[0] && _strcmp(args[0], "exit") == 0)
 	{
 		status = args[1];
 		if (status)
