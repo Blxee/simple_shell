@@ -44,11 +44,12 @@ int *get_last_cmd_exit(void)
  *
  * @line: a pointer to the line to replace its variables
  * @sign_idx: index of the vatiable in the line
+ * @envp: environment variables vector
  * @var: a buffer to store the value
  *
  * Return: length of the variable
  */
-int get_var_value(char *line, int sign_idx, char **var)
+int get_var_value(char *line, int sign_idx, char **envp, char **var)
 {
 	int i;
 	char *value = NULL;
@@ -63,10 +64,10 @@ int get_var_value(char *line, int sign_idx, char **var)
 		i = get_var_name(line + sign_idx + 1, (*var));
 		if (i)
 		{
-			value = _getenv((*var));
+			value = _getenv((*var), envp);
 			if (value)
 				_strcpy((*var), value + i + 1); /* copy after NAME= part */
-			else /* if the (*var) is not defined in environ */
+			else /* if the (*var) is not defined in envp */
 				(*var)[0] = '\0';
 		}
 		else /* there is no (*var) name */
@@ -81,8 +82,9 @@ int get_var_value(char *line, int sign_idx, char **var)
  * with thier corresponding value
  *
  * @line: a pointer to the line to replace its variables
+ * @envp: environment variables vector
  */
-void replace_variables(char **line)
+void replace_variables(char **line, char **envp)
 {
 	int sign_indices[64], sign_idx, i = 0, j, offset = 0;
 	unsigned int linelen = _strlen(*line);
@@ -98,7 +100,7 @@ void replace_variables(char **line)
 		char _var[256], *var = _var, *newline;
 
 		sign_idx += offset;
-		j = get_var_value(*line, sign_idx, &var);
+		j = get_var_value(*line, sign_idx, envp, &var);
 
 		linelen += _strlen(var);
 		newline = alloc_mem(linelen + 1);

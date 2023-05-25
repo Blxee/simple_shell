@@ -8,26 +8,27 @@
  *	in which the command was found
  *
  * @cmd: the command string to prepend path to (without args)
+ * @envp: the environment variables vector
  *
  * Return:
  *	1 if the command was found
  *	0 elsewise
  */
-int handle_path(char **cmd)
+int handle_path(char **cmd, char *envp[])
 {
 	char *path = NULL, *dir, cmd_cpy[128];
 
 	_strcpy(cmd_cpy, *cmd); /* preserve the original command */
 	if (access(cmd_cpy, F_OK) == 0) /* if cmd is a full path */
 		return (1);
-	while (*environ)
+	while (*envp)
 	{	/* look for PATH variable */
-		if (_strncmp("PATH=", *environ, 5) == 0)
+		if (_strncmp("PATH=", *envp, 5) == 0)
 		{ /* PATH found */
-			path = *environ + 5; /* +5 to jump the "PATH=" section */
+			path = *envp + 5; /* +5 to jump the "PATH=" section */
 			break;
 		}
-		environ++;
+		envp++;
 	}
 	if (path && path[0] != '\0')
 	{
@@ -70,9 +71,10 @@ void child_process(char *cmd, char *args[])
  *
  * @args: an array to store the arguments (starting with @cmd)
  * @line: the raw input line fromthe user
+ * @envp: the environment variables vector
  * @stdin_fd: the input file director
  */
-void parse_cmd(char *args[], char *line, int stdin_fd)
+void parse_cmd(char *args[], char *line, char **envp, int stdin_fd)
 {
 	int i = 0, cmmt_idx;
 	char *token, *quoted_strings[128], **quote = quoted_strings;
@@ -80,19 +82,17 @@ void parse_cmd(char *args[], char *line, int stdin_fd)
 	cmmt_idx = find_chars(line, "#");
 	if (cmmt_idx != -1)
 		line[cmmt_idx] = '\0';
-	replace_variables(&line);
-	/* get_quoted_strings(&line, quoted_strings, stdin_fd); */
-	(void)stdin_fd;
-	(void)quote;
+	replace_variables(&line, envp);
+	get_quoted_strings(&line, quoted_strings, stdin_fd);
 	token = _strtok(line, " \t\n\r");
 	if (token)
 	{
-		/* expand_quote(&token, &quote); */
+		expand_quote(&token, &quote);
 		args[i++] = token;
 	}
 	while ((token = _strtok(NULL, " \t\n\r")))
 	{
-		/* expand_quote(&token, &quote); */
+		expand_quote(&token, &quote);
 		args[i++] = token;
 	}
 	args[i] = NULL; /*set the last element to NULL*/
@@ -103,8 +103,9 @@ void parse_cmd(char *args[], char *line, int stdin_fd)
  *
  * @is_interactive: boolean represents whether this is interactive session
  * @args: arguments to pass to execve syscall
+ * @envp: the environment variables vector
  */
-void fork_process(int is_interactive, char **args)
+void fork_process(int is_interactive, char **args, char *envp[])
 {
 	static unsigned int prompt_number;
 	int fork_ret, child_ret = 0;
@@ -118,9 +119,9 @@ void fork_process(int is_interactive, char **args)
 		args = next_cmd;
 		next_separator(&next_cmd, &sep);
 		/* replace_aliased(&args[0]); */
-		if (check_custom_commands(args))
+		if (check_custom_commands(args, envp))
 			continue;
-		if (!handle_path(&args[0]))
+		if (!handle_path(&args[0], envp))
 		{
 			_writestr(STDERR_FILENO, *get_program_name());
 			_writestr(STDERR_FILENO, ": ");

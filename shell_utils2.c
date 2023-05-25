@@ -18,20 +18,21 @@ char **get_program_name(void)
  * check_custom_commands - executes a custom command if it finds one
  *
  * @args: the cmd and ita arguments (specified by the user)
+ * @envp: the environment variables vector
  *
  * Return: 1 if it found a custom command and 0 if not
  */
-int check_custom_commands(char **args)
+int check_custom_commands(char **args, char **envp)
 {
 	char *cmd = args[0];
 
-	if (check_env(cmd))
+	if (check_env(cmd, envp))
 		return (1);
-	if (check_setenv(args))
+	if (check_setenv(args, envp))
 		return (1);
-	if (check_unsetenv(args))
+	if (check_unsetenv(args, envp))
 		return (1);
-	if (check_cd(args))
+	if (check_cd(args, envp))
 		return (1);
 	if (check_alias(args))
 		return (1);

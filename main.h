@@ -5,8 +5,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-extern char **environ;
-
 #ifdef MEM_ARRAY_SIZE
 #undef MEM_ARRAY_SIZE
 #endif /* !MEM_ARRAY_SIZE */
@@ -44,26 +42,29 @@ void print_aliases(void);
 
 /* shell utils */
 int handle_exit(char **args);
-int handle_path(char **cmd);
+int handle_path(char **cmd, char *envp[]);
 void child_process(char *cmd, char *args[]);
-void parse_cmd(char *args[], char *line, int stdin_fd);
-void fork_process(int is_interactive, char **args);
-int check_custom_commands(char **args);
+void parse_cmd(char *args[], char *line,
+		char **envp, int stdin_fd);
+void fork_process(int is_interactive,
+		char **args,
+		char *envp[]);
+int check_custom_commands(char **args, char **envp);
 void get_quoted_strings(char **line, char **quoted_strings, int stdin_fd);
 char **get_program_name(void);
 void next_separator(char ***next_cmd, char *sep);
 void expand_quote(char **str, char ***quotes);
-void replace_variables(char **line);
+void replace_variables(char **line, char **envp);
 int *get_last_cmd_exit(void);
 int open_file(int argc, char **argv);
 
 /* custom_commands */
-char *_getenv(char *var);
-char *_setenv(char *var, char *value);
-int check_env(char *cmd);
-int check_setenv(char **args);
-int check_unsetenv(char **args);
-int check_cd(char **args);
+char *_getenv(char *var, char **envp);
+char *_setenv(char *var, char *value, char **envp);
+int check_env(char *cmd, char **envp);
+int check_setenv(char **args, char **envp);
+int check_unsetenv(char **args, char **envp);
+int check_cd(char **args, char **envp);
 int check_alias(char **args);
 void replace_aliased(char **cmd);
 
