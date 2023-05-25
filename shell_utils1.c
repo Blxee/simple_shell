@@ -103,7 +103,7 @@ void parse_cmd(char *args[], char *line, char **envp, int stdin_fd)
  */
 void fork_process(int is_interactive, char **args, char *envp[])
 {
-	int fork_ret, child_ret = 0, is_custom_cmd;
+	int fork_ret, child_ret = 0;
 	char **next_cmd = args, sep = ';';
 
 	while (sep && (sep == ';' || (sep == '&' && child_ret == 0)
@@ -111,15 +111,15 @@ void fork_process(int is_interactive, char **args, char *envp[])
 	{ /* for each (; || &&) separated command */
 		args = next_cmd;
 		next_separator(&next_cmd, &sep);
-		is_custom_cmd = check_custom_commands(args, envp);
+		replace_aliased(&args[0]);
+		if (check_custom_commands(args, envp))
+			continue;
 		if (!handle_path(&args[0], envp))
 		{
 			perror(*get_program_name());
 			*get_last_cmd_exit() = child_ret = 127;
 			continue;
 		}
-		if (is_custom_cmd)
-			continue;
 		fork_ret = fork();
 		if (fork_ret == -1)
 		{ /* fork failed */
@@ -159,10 +159,10 @@ int handle_exit(char **args)
 		{
 			if (!_isdigit(status[i]))
 			{
-				err_msg = "Invalide exit status: ";
+				err_msg = "Invalid exit status: ";
 				write(STDERR_FILENO, err_msg, _strlen(err_msg));
-				write(STDOUT_FILENO, status, _strlen(status));
-				write(STDOUT_FILENO, "\n", 1);
+				write(STDERR_FILENO, status, _strlen(status));
+				write(STDERR_FILENO, "\n", 1);
 				return (1);
 			}
 		}

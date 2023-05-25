@@ -81,27 +81,38 @@ char *_setenv(char *var, char *value, char **envp)
 #endif /* !ALIASES_SIZE */
 #define ALIASES_SIZE 128
 
+/**
+ * get_aliases - returns a pointer to the aliases array
+ *
+ * Return: the pointer to the aliases
+ */
 char **get_aliases(void)
 {
 	static char **s_aliases;
 
 	if (s_aliases == NULL)
-		alloc_mem(ALIASES_SIZE * 2 * sizeof(char));
+		s_aliases = alloc_mem(ALIASES_SIZE * 2 * sizeof(char));
 	return (s_aliases);
 }
 
 /**
+ * check_alias - checks whether the cmd is 'alias'
+ *
+ * @args: the cmd and its arguments
+ *
+ * Return: 1 if the cmd was 'alias', 0 elsewise
  */
 int check_alias(char **args)
 {
 	char **aliases = get_aliases();
+	char **next_alias = args + 1, *alias_name, *alias_value;
 	unsigned int i;
 
 	if (_strcmp(args[0], "alias") == 0)
 	{
-		if (args[1] == NULL)
+		if (*next_alias == NULL)
 		{
-			for (i = 0; aliases[i]; i++)
+			for (i = 0; aliases[i]; i += 2)
 			{
 				_writestr(STDOUT_FILENO, aliases[i + 0]);
 				_writestr(STDOUT_FILENO, "=");
@@ -110,12 +121,34 @@ int check_alias(char **args)
 			}
 			return (1);
 		}
+		while (*next_alias)
+		{
+			while (*aliases)
+				aliases += 2;
+			alias_name = _strtok(*next_alias, "=");
+			alias_value = _strtok(NULL, "=");
+			if (!alias_value)
+			{
+				_writestr(STDERR_FILENO, "Error: no value specified!\n");
+				*get_last_cmd_exit() = 1;
+				break;
+			}
+			aliases[0] = alloc_mem(_strlen(alias_name) + 1);
+			aliases[1] = alloc_mem(_strlen(alias_value) + 1);
+			_strcpy(aliases[0], alias_name);
+			_strcpy(aliases[1], alias_value);
+			next_alias++;
+			aliases += 2;
+		}
 		return (1);
 	}
 	return (0);
 }
 
 /**
+ * replace_aliased - replaces command if it's an alias
+ *
+ * @cmd: a pointer to the command
  */
 void replace_aliased(char **cmd)
 {
