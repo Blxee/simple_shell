@@ -4,21 +4,22 @@
  * check_env - checks the "env" custom command
  *
  * @cmd: the command
- * @envp: environment variables array
  *
  * Return:
  *	1 if the command was "env"
  *	0 elsewise
  */
-int check_env(char *cmd, char **envp)
+int check_env(char *cmd)
 {
+	unsigned int i = 0;
+
 	if (_strcmp(cmd, "env") == 0)
 	{
-		while (*envp)
+		while (environ[i])
 		{
-			_writestr(STDOUT_FILENO, *envp);
+			_writestr(STDOUT_FILENO, environ[i]);
 			_writestr(STDOUT_FILENO, "\n");
-			envp++;
+			i++;
 		}
 		return (1);
 	}
@@ -29,28 +30,28 @@ int check_env(char *cmd, char **envp)
  * check_setenv - sets an environment variable if found
  *
  * @args: the command (of the user) and its arguments
- * @envp: the environment variable vector
  *
  * Return: whether the command was setenv
  */
-int check_setenv(char **args, char **envp)
+int check_setenv(char **args)
 {
 	char *cmd = args[0], *var = args[1], *value = args[2];
+	unsigned int i = 0;
 
 	if (cmd && _strcmp(cmd, "setenv") == 0)
 	{ /* the command was setenv */
 		if (var && value && !args[3])
 		{ /* the arguments to setenv were correct */
-			_setenv(var, value, envp);
+			_setenv(var, value);
 			return (1);
 		}
-		else if (!args[1]) /* if setenv is without args just print the envp vector */
-		{
-			while (*envp)
+		else if (!args[1])
+		{ /* if setenv is without args just print the environ vector */
+			while (environ[i])
 			{
-				_writestr(STDOUT_FILENO, *envp);
+				_writestr(STDOUT_FILENO, environ[i]);
 				_writestr(STDOUT_FILENO, "\n");
-				envp++;
+				i++;
 			}
 			return (1);
 		}
@@ -62,11 +63,10 @@ int check_setenv(char **args, char **envp)
  * check_unsetenv - unsets an environment variable if found
  *
  * @args: the command (of the user) and its arguments
- * @envp: the environment variable vector
  *
  * Return: whether the command was unsetenv
  */
-int check_unsetenv(char **args, char **envp)
+int check_unsetenv(char **args)
 {
 	unsigned int i = 0, varlen;
 	char *cmd = args[0], *var = args[1];
@@ -77,14 +77,14 @@ int check_unsetenv(char **args, char **envp)
 		{ /* the arguments to unsetenv were correct */
 			varlen = _strlen(var);
 			var[varlen++] = '=';
-			while (envp[i])
+			while (environ[i])
 			{ /* iterate through all environment variables */
-				if (_strncmp(envp[i], var, varlen) == 0)
+				if (_strncmp(environ[i], var, varlen) == 0)
 				{ /* the variable to be unset was found */
 					do { /* offset all the next environment variables by 1 */
-						envp[i] = envp[i + 1];
+						environ[i] = environ[i + 1];
 						i++;
-					} while (envp[i]);
+					} while (environ[i]);
 					return (1);
 				}
 				i++;
@@ -98,20 +98,19 @@ int check_unsetenv(char **args, char **envp)
  * check_cd - checks whether the command is "cd", if so, it executes it
  *
  * @args: the command (of the user) and its arguments
- * @envp: the environment variable vector
  *
  * Return: whether the command was "cd"
  */
-int check_cd(char **args, char **envp)
+int check_cd(char **args)
 {
 	char *dir = args[1], *oldpwd, *pwd, *oldpwd_cpy = NULL;
 	char home_name[] = "HOME", oldpwd_name[] = "OLDPWD", pwd_name[] = "PWD";
 
 	if (_strcmp(args[0], "cd") == 0)
 	{
-		oldpwd = _getenv(oldpwd_name, envp) + 7;
+		oldpwd = _getenv(oldpwd_name) + 7;
 		if (!dir || !*dir || _strcmp(dir, "~") == 0)
-			dir = _getenv(home_name, envp) + 5;
+			dir = _getenv(home_name) + 5;
 		else if (_strcmp(dir, "-") == 0)
 		{
 			oldpwd_cpy = alloc_mem((_strlen(oldpwd) + 1));
@@ -122,9 +121,9 @@ int check_cd(char **args, char **envp)
 			perror(*get_program_name());
 		dir = alloc_mem(513 * sizeof(char));
 		getcwd(dir, 512);
-		pwd = _getenv(pwd_name, envp) + 4;
-		_setenv(oldpwd_name, pwd, envp);
-		_setenv(pwd_name, oldpwd_cpy ? oldpwd_cpy : dir, envp);
+		pwd = _getenv(pwd_name) + 4;
+		_setenv(oldpwd_name, pwd);
+		_setenv(pwd_name, oldpwd_cpy ? oldpwd_cpy : dir);
 		if (oldpwd_cpy)
 		{
 			_writestr(STDOUT_FILENO, oldpwd_cpy);
