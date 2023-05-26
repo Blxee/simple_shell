@@ -151,36 +151,30 @@ void fork_process(int is_interactive, char **args)
  */
 int handle_exit(char **args)
 {
-char *status;
+	char *status;
 	int exit_status;
 	unsigned int i;
 
 	if (_strcmp(args[0], "exit") == 0)
 	{
-		if (args[1] == NULL)
-		{
-			exit(0);
-			return (1);
-		}
 		status = args[1];
-		if (status[0] == '-')
-		{
+		if (status == NULL || status[0] == '-')
 			return (1);
-		}
 		else
 		{
 			for (i = 0; i < _strlen(status); i++)
 			{
 				if (!_isdigit(status[i]))
 				{
-					return (1);
+					perror(*get_program_name());
+					*get_last_cmd_exit() = 2;
+					return (0);
 				}
 			}
 			exit_status = _atoi(status);
+			*get_last_cmd_exit() = exit_status;
+			return (1);
 		}
-		free_all();
-		exit(exit_status);
-		return (1);
 	}
 	return (0);
 }
