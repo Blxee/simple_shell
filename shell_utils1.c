@@ -80,7 +80,7 @@ void parse_cmd(char *args[], char *line, int stdin_fd)
 	char *token = NULL, *quoted_strings[128], **quote = quoted_strings;
 
 	cmmt_idx = find_chars(line, "#");
-	if (cmmt_idx != -1)
+	if (cmmt_idx != -1 && line[cmmt_idx - 1] == ' ')
 		line[cmmt_idx] = '\0';
 	replace_variables(&line);
 	get_quoted_strings(&line, quoted_strings, stdin_fd);
