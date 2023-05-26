@@ -21,6 +21,7 @@ int check_env(char *cmd)
 			_writestr(STDOUT_FILENO, "\n");
 			i++;
 		}
+		*get_program_name() = 0;
 		return (1);
 	}
 	return (0);
