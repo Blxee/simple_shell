@@ -16,6 +16,9 @@ void handle_sig(int sig)
 	exit(*get_last_cmd_exit());
 }
 
+/**
+ * init_env - moves the environ variable to the heap
+ */
 void init_env(void)
 {
 	char **newenv = NULL;
