@@ -16,18 +16,19 @@
 int handle_path(char **cmd)
 {
 	char *path = NULL, *dir, cmd_cpy[128];
+	unsigned int i = 0;
 
 	_strcpy(cmd_cpy, *cmd); /* preserve the original command */
 	if (access(cmd_cpy, F_OK) == 0) /* if cmd is a full path */
 		return (1);
-	while (*environ)
+	while (environ[i])
 	{	/* look for PATH variable */
-		if (_strncmp("PATH=", *environ, 5) == 0)
+		if (_strncmp("PATH=", environ[i], 5) == 0)
 		{ /* PATH found */
-			path = *environ + 5; /* +5 to jump the "PATH=" section */
+			path = environ[i] + 5; /* +5 to jump the "PATH=" section */
 			break;
 		}
-		environ++;
+		i++;
 	}
 	if (path && path[0] != '\0')
 	{
