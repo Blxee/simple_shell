@@ -153,14 +153,33 @@ int handle_exit(char **args)
 {
 	char *status;
 	int exit_status;
+	unsigned int i;
 
 	if (_strcmp(args[0], "exit") == 0)
 	{
+		if (args[1] == NULL)
+		{
+			exit(0);
+			return (1);
+		}
 		status = args[1];
-		if (status)
-			exit_status = _atoi(status);
+		if (status[0] == '-')
+		{
+			fprintf(stderr, "%s: exit: Illegal number: %s\n", *get_program_name(), status);
+			return (1);
+		}
 		else
-			exit_status = *get_last_cmd_exit();
+		{
+			for (i = 0; i < _strlen(status); i++)
+			{
+				if (!_isdigit(status[i]))
+				{
+					fprintf(stderr, "%s: exit: Illegal number: %s\n", *get_program_name(), status);
+					return (1);
+				}
+			}
+			exit_status = _atoi(status);
+		}
 		free_all();
 		exit(exit_status);
 		return (1);
