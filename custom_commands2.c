@@ -55,7 +55,7 @@ char *_setenv(char *var, char *value)
 				if (_strlen(environ[j]) < valuelen)
 				{ /* if memory of environ[j] is not enough to hold new value */
 					free_mem(environ[j]);
-					environ[j] = alloc_mem(valuelen * sizeof(char));
+					environ[j] = alloc_mem(valuelen + 1);
 				}
 				var[i] = '\0';
 				_strcpy(environ[j], var), _strcat(environ[j], "=");
