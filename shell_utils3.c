@@ -108,7 +108,7 @@ void replace_variables(char **line)
 		_strcat(newline, *line + sign_idx + j + 1);
 		offset += _strlen(var) - j - 1;
 		free_mem(var);
-		free_mem(*line);
+		/* free_mem(*line); */
 		*line = newline;
 	}
 }
