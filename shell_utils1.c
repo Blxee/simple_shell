@@ -164,7 +164,7 @@ void fork_process(int is_interactive, char **args)
  */
 int handle_exit(char **args)
 {
-	char *status;
+char *status;
 	int exit_status;
 	unsigned int i;
 
@@ -178,7 +178,6 @@ int handle_exit(char **args)
 		status = args[1];
 		if (status[0] == '-')
 		{
-			fprintf(stderr, "%s: exit: Illegal number: %s\n", *get_program_name(), status);
 			return (1);
 		}
 		else
@@ -187,7 +186,6 @@ int handle_exit(char **args)
 			{
 				if (!_isdigit(status[i]))
 				{
-					fprintf(stderr, "%s: exit: Illegal number: %s\n", *get_program_name(), status);
 					return (1);
 				}
 			}
