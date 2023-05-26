@@ -54,6 +54,8 @@ int main(int argc, char *argv[])
 				break;
 		}
 		parse_cmd(args, line, stdin_fd);
+		if (!is_interactive && args[0] == NULL)
+			break;
 		if (handle_exit(args))
 			break;
 		fork_process(is_interactive, args);
