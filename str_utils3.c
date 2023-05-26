@@ -21,3 +21,25 @@ char *_strncpy(char *dest, const char *src, unsigned int n)
 		} while (*src++);
 	return (dest);
 }
+
+/**
+ * _strdup - duplicates a string
+ *
+ * @str: a null terminated string to duplicate
+ *
+ * Return: a newly allocated string that has the same data as @str
+ */
+char *_strdup(const char *str)
+{
+	char *new = NULL;
+	unsigned int i;
+
+	if (str)
+	{
+		new = alloc_mem((_strlen(str) + 1) * sizeof(char));
+		for (i = 0; str[i]; i++)
+			new[i] = str[i];
+		new[i] = '\n';
+	}
+	return (new);
+}

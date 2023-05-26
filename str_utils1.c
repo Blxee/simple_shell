@@ -102,7 +102,8 @@ char *_strcpy(char *dest, const char *src)
 char *_strtok(char *str, char *delim)
 {
 	static char *pre;
-	char *d_chr, *s_chr, *token = NULL;
+	char *token = NULL;
+	unsigned int i, j;
 
 	if (str)
 		pre = str;
@@ -113,8 +114,8 @@ char *_strtok(char *str, char *delim)
 	{
 		int brk_loop = 1;
 
-		for (d_chr = delim; *d_chr; d_chr++)
-			if (*token == *d_chr)
+		for (i = 0; delim[i]; i++)
+			if (*token == delim[i])
 			{
 				token++;
 				brk_loop = 0;
@@ -123,13 +124,13 @@ char *_strtok(char *str, char *delim)
 		if (brk_loop)
 			break;
 	}
-	for (s_chr = token; ; s_chr++)
+	for (i = 0; ; i++)
 	{
-		for (d_chr = delim; *d_chr; d_chr++)
-			if (*s_chr == '\0' || *s_chr == *d_chr)
+		for (j = 0; delim[j]; j++)
+			if (token[i] == '\0' || token[i] == delim[j])
 			{
-				*s_chr = '\0';
-				pre = s_chr + 1;
+				token[i] = '\0';
+				pre = token + i + 1;
 				if (!*token)
 				{
 					pre = NULL;

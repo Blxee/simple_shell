@@ -72,14 +72,14 @@ int _writestr(int fd, char *str);
 ssize_t _getline(char **lineptr, size_t *n, int fd);
 
 /* string utils */
-char *_strdup(char *str);
+char *_strdup(const char *str);
 int _atoi(char *s);
 int _strncmp(char *str1, char *str2, unsigned int n);
 char *_strcat(char *dest, const char *src);
 int _strcmp(char *s1, char *s2);
 char *_strcpy(char *dest, const char *src);
 char *_strtok(char *str, char *delim);
-unsigned int _strlen(char *str);
+unsigned int _strlen(const char *str);
 int find_chars(char *str, char *chars);
 int _isdigit(int c);
 char *int_to_str(long n);

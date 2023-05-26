@@ -16,6 +16,23 @@ void handle_sig(int sig)
 	exit(*get_last_cmd_exit());
 }
 
+void init_env(void)
+{
+	char **newenv = NULL;
+	unsigned int envlen = 1, i = 0;
+
+	while (environ[envlen])
+		envlen++;
+
+	newenv = alloc_mem((envlen + 64) * sizeof(char *));
+
+	do {
+		newenv[i] = _strdup(environ[i]);
+	} while (environ[i++]);
+
+	environ = newenv;
+}
+
 /**
  * main - simple shell program
  *
