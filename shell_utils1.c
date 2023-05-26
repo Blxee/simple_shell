@@ -160,6 +160,7 @@ char *status;
 	{
 		if (args[1] == NULL)
 		{
+			free_all();
 			exit(*get_last_cmd_exit());
 			return (1);
 		}
