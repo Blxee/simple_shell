@@ -149,6 +149,7 @@ void fork_process(int is_interactive, char **args)
  * @args: the command from the user and its arguments
  * Return: 1 if cmd is exit and successful, 0 otherwise.
  */
+
 int handle_exit(char **args)
 {
 char *status;
@@ -157,10 +158,15 @@ char *status;
 
 	if (_strcmp(args[0], "exit") == 0)
 	{
-		status = args[1];
-		if (status == NULL || status[0] == '-')
+		if (args[1] == NULL)
 		{
-			exit_status = *get_last_cmd_exit();
+			exit(*get_last_cmd_exit());
+			return (1);
+		}
+		status = args[1];
+		if (status[0] == '-')
+		{
+			return (1);
 		}
 		else
 		{
@@ -168,14 +174,14 @@ char *status;
 			{
 				if (!_isdigit(status[i]))
 				{
-					*get_last_cmd_exit() = 2;
-					return (0);
+					return (1);
 				}
 			}
 			exit_status = _atoi(status);
 		}
 		free_all();
 		exit(exit_status);
+		return (1);
 	}
 	return (0);
 }
